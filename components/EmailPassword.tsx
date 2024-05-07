@@ -4,7 +4,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-const Email_password: React.FC = () => {
+const EmailPassword: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Email_password;
+export default EmailPassword;
