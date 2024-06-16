@@ -3,13 +3,11 @@ import { StyleSheet, Text, View, StatusBar, TouchableOpacity,Image
 } from "react-native";
 import Email_password from "./EmailPassword";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
-import { NavigationProp } from '@react-navigation/native';
-import  type {LogInBodyScreenProps}  from '../types'
-import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import  type {LogInScreenProps}  from '../types'
 
 
-function LogIn({ navigation }: LogInBodyScreenProps) {
+
+function LogIn({ navigation }: LogInScreenProps) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
