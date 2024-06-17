@@ -1,19 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignUp from './components/SignUp';
-import LogIn from './components/LogIn';
-const Stack = createNativeStackNavigator();
+import { UserProvider } from "./app/services/UserContext";
+import { ApplicationLayout } from "./app/component/layout/ApplicationLayout";
+import { LoadingProvider } from "./app/services/LoadingContext";
+import { PaperProvider } from "react-native-paper";
+import { DEFAULT_THEME } from "./app/styles/Colors";
+
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="LogInBody">
-        <Stack.Screen  options={{ headerShown: false }} name = "LogIn" component={LogIn}/>
-        <Stack.Screen  options={{ headerShown: false }} name = "SignUp" component={SignUp}/>
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <LoadingProvider>
+            <UserProvider>
+                <PaperProvider theme={DEFAULT_THEME}>
+                    <ApplicationLayout/>
+                </PaperProvider>
+            </UserProvider>
+        </LoadingProvider>
+    );
 }
-
-
