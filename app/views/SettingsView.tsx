@@ -1,5 +1,5 @@
 import { Button, Text } from "react-native";
-import { ApplicationBottomBar } from "../component/ApplicationBottomBar";
+import { ApplicationBottomBar } from "../component/navigation/ApplicationBottomBar";
 import { RouterProps } from "../model/Routing";
 import { auth } from "../services/Firebase";
 import { ViewContainer } from "../component/ViewContainer";

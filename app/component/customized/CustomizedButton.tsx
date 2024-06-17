@@ -1,7 +1,7 @@
 import { Button } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { useContext } from "react";
-import { LoadingContext } from "../services/LoadingContext";
+import { LoadingContext } from "../../services/LoadingContext";
 
 interface CustomizedContainedButtonProps {
     title: string;

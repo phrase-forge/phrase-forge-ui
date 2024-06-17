@@ -1,6 +1,6 @@
 import { TextInput } from "react-native-paper";
 import { StyleSheet, Text, View } from "react-native";
-import { DEFAULT_COLORS } from "../styles/Colors";
+import { DEFAULT_COLORS } from "../../styles/Colors";
 
 interface CustomizedTextInputProps {
     value: string;

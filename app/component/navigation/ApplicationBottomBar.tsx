@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Appbar } from "react-native-paper";
-import { DEFAULT_COLORS } from "../styles/Colors";
-import { ApplicationRoute } from "../model/Routing";
+import { DEFAULT_COLORS } from "../../styles/Colors";
+import { ApplicationRoute } from "../../model/Routing";
 import { useRoute } from "@react-navigation/native";
 
 const BOTTOM_APPBAR_HEIGHT = 70;

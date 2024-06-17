@@ -8,7 +8,10 @@ export enum ApplicationRoute {
     HOME = 'Home',
     GAMES = 'Games',
     ACCOUNT = 'Account',
-    SETTINGS = 'Settings'
+    SETTINGS = 'Settings',
+    STATS = 'Stats',
+    ACHIEVEMENTS = 'Achievements',
+    ACTIVITY = 'Activity'
 }
 
 export interface RouterProps {

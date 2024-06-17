@@ -4,10 +4,10 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
 import { StyleSheet, Text, View } from "react-native";
 import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
-import { CustomizedTextInput } from "../component/CustomizedTextInput";
+import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
 import { Link } from "@react-navigation/native";
 import { DEFAULT_COLORS } from "../styles/Colors";
-import { CustomizedButton } from "../component/CustomizedButton";
+import { CustomizedButton } from "../component/customized/CustomizedButton";
 import { ApplicationRoute } from "../model/Routing";
 
 export const RegisterView = () => {

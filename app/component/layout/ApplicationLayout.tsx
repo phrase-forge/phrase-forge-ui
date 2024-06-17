@@ -19,15 +19,17 @@ export const ApplicationLayout = () => {
 
     const handleLoggedUser = (user: User) => {
         UserService.getUserDataById(user.uid)
-            .then(getDataResult => {
+            .then(([getDataResult, userStats]) => {
                 const data = getDataResult.data();
                 if (!data) {
                     UserService.addUser(user).then();
                 }
 
                 const roles = data ? data.roles : [UserRole.USER];
+                const username = data && data.username || 'User';
+                const stats = userStats || {}
 
-                setUser({ user, roles });
+                setUser({ user, roles, username, stats });
             })
             .catch(err => {
                 console.error(err);

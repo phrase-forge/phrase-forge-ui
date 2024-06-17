@@ -1,6 +1,6 @@
 import { ActivityIndicator } from "react-native-paper";
 import { useContext } from "react";
-import { LoadingContext } from "../services/LoadingContext";
+import { LoadingContext } from "../../services/LoadingContext";
 import { StyleSheet, View } from "react-native";
 
 const style = StyleSheet.create({

@@ -4,11 +4,11 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
 import { LoadingContext } from "../services/LoadingContext";
 import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
-import { CustomizedTextInput } from "../component/CustomizedTextInput";
-import { CustomizedButton } from "../component/CustomizedButton";
+import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
+import { CustomizedButton } from "../component/customized/CustomizedButton";
 import { DEFAULT_COLORS } from "../styles/Colors";
 import { Link } from "@react-navigation/native";
-import { CustomizedDivider } from "../component/CustomizedDivider";
+import { CustomizedDivider } from "../component/customized/CustomizedDivider";
 import { SocialIcon } from "@rneui/themed";
 import { ApplicationRoute } from "../model/Routing";
 
