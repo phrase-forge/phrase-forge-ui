@@ -14,9 +14,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@react-navigation/stack": "^6.3.29",
-    "@rneui/base": "^0.0.0-edge.2",
-    "@rneui/themed": "^0.0.0-edge.2",
-    "expo": "^51.0.14",
+    "expo": "~51.0.14",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.12.2",
     "react": "18.2.0",
@@ -36,7 +34,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "globals": "^15.0.0",
-    "typescript": "~5.3.3",
+    "typescript": "^5.4.5",
     "typescript-eslint": "^7.7.1"
   },
   "private": true

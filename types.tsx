@@ -16,7 +16,7 @@ export type SignUpScreenProps = NativeStackScreenProps<
 
 >;
 
-export type LogInBodyScreenProps = NativeStackScreenProps<
+export type LogInScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'LogIn'
 >;
