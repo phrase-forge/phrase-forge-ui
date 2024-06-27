@@ -41,7 +41,7 @@ const ApplicationBarAction = (props) => {
     const currentRoute = useRoute();
     const { label, icon, route, navigation } = props.propsObject;
     const getStyles = () => {
-        return currentRoute.name === route ?
+        return isRouteMatching() ?
             {
                 borderTopWidth: 3,
                 borderTopColor: DEFAULT_COLORS.primaryBlue,
@@ -49,9 +49,22 @@ const ApplicationBarAction = (props) => {
     };
 
     const getColor = () => {
-        return currentRoute.name === route ?
+        return isRouteMatching() ?
             DEFAULT_COLORS.primaryBlue:
             DEFAULT_COLORS.primaryDark
+    }
+
+    const isRouteMatching = (): boolean => {
+        const splitRoute = currentRoute.name.split('/') as string[];
+        return splitRoute.includes(route.slice(1));
+    }
+
+    const gamesNestedParameters = {
+        screen: ApplicationRoute.GAMES_VIEW
+    }
+
+    const getNestedParams = () => {
+        return route === ApplicationRoute.GAMES ? gamesNestedParameters: {};
     }
 
     return (
@@ -63,7 +76,8 @@ const ApplicationBarAction = (props) => {
             ...getStyles() }}>
             <Appbar.Action iconColor={getColor()}  icon={icon} onPress={() => {
                 navigation.navigate(ApplicationRoute.LOGGED_LAYOUT, {
-                    screen: route
+                    screen: route,
+                    params: getNestedParams()
                 });
             }}/>
             <Text style={{color: getColor()}}>{label}</Text>

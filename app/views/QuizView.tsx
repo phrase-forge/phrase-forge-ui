@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ViewContainer } from "../component/ViewContainer";
+import { RouterProps } from "../model/Routing";
+import { ApplicationBottomBar } from "../component/navigation/ApplicationBottomBar";
 
-const Quiz: React.FC = () => {
-    return (
+export const QuizView = ({ navigation }: RouterProps) => {
+    return <ViewContainer>
         <View style={styles.quizContainer}>
             <Text style={styles.quizTitle}>Quiz</Text>
             <Text style={styles.quizSubtitle}>Select the correct answer</Text>
@@ -24,7 +27,8 @@ const Quiz: React.FC = () => {
                 </TouchableOpacity>
             </View>
         </View>
-    );
+        <ApplicationBottomBar props={{ navigation, }}/>
+    </ViewContainer>;
 };
 
 const styles = StyleSheet.create({
@@ -74,5 +78,3 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 });
-
-export default Quiz;

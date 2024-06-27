@@ -1,13 +1,13 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../services/UserContext";
 import { ApplicationRoute, RouterProps } from "../model/Routing";
 import { ApplicationBottomBar } from "../component/navigation/ApplicationBottomBar";
 import { DEFAULT_COLORS } from "../styles/Colors";
-import { Avatar, IconButton, ProgressBar, Tooltip } from "react-native-paper";
+import { IconButton, ProgressBar, Tooltip } from "react-native-paper";
 import { Link } from "@react-navigation/native";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
-import { CustomizedAvatar } from "../component/customized/CustomizedAvatar";
+import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
 
 interface GameProgressProps {
     title: string;
@@ -40,15 +40,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
 
     return (
         <View style={{ flex: 1, }}>
-            <View style={styles.headerContainer}>
-                <View style={{ padding: 32 }}>
-                    <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold' }}>Hi, {user.username}</Text>
-                    <Text style={{ color: 'white', fontSize: 16 }}>Let's start learning</Text>
-                </View>
-                <View style={{ padding: 32 }}>
-                    <CustomizedAvatar size='small'/>
-                </View>
-            </View>
+            <HomeNavbarComponent title={`Hi, ${user.username}`} description={"Let's start learning"}/>
             <ScrollView style={{ height: '100%', marginBottom: 100 }}>
                 <CustomizedCard>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -107,28 +99,3 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    headerContainer: {
-        backgroundColor: DEFAULT_COLORS.primaryBlue,
-        height: 220,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    contentContainer: {
-        marginHorizontal: 32,
-        marginTop: 24,
-        backgroundColor: 'white',
-        borderRadius: 8,
-        shadowColor: '#171717',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        paddingVertical: 32,
-        paddingHorizontal: 24,
-        display: 'flex',
-        gap: 8
-    }
-});
