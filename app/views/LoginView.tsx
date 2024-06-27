@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useContext, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
@@ -28,7 +28,7 @@ export const LoginView = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <ApplicationHeaderComponent title="Log In" description="Enter your details and log in to your account"/>
             <View style={styles.inputContainer}>
                 <CustomizedTextInput
@@ -72,7 +72,7 @@ export const LoginView = () => {
                 <SocialIcon type="google"/>
                 <SocialIcon type="facebook"/>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 

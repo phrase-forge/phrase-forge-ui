@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { LoadingContext } from "../services/LoadingContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
 import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
 import { Link } from "@react-navigation/native";
@@ -26,7 +26,7 @@ export const RegisterView = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <ApplicationHeaderComponent title="Sign Up" description="Enter your details below and create your account"/>
             <View style={styles.inputContainer}>
                 <CustomizedTextInput
@@ -54,7 +54,7 @@ export const RegisterView = () => {
                     Log in
                 </Link>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
