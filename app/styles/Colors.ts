@@ -5,6 +5,8 @@ export const DEFAULT_COLORS = {
     primaryGray: '#858597',
     secondaryGray: '#B8B8D2',
     primaryBlue: '#68AFBF',
+    primaryWhite: '#FFFFFF',
+    primaryPink: '#ffe4e1',
 };
 
 export const DEFAULT_THEME = {

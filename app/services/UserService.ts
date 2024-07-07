@@ -1,5 +1,5 @@
-import { GameStatistic, UserRole, UserStats } from "../model/ApplicationUser";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { GameStatistic, QuizTask, UserRole, UserStats } from "../model/ApplicationUser";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
 import { User } from "firebase/auth";
@@ -27,6 +27,46 @@ export class UserService {
         const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc)
         return Promise.all([addUserPromise, addUserStatPromise]);
     }
+    static async addTaskToUserStats(userId : string, task:string) {
+        const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)));
+        Promise.all([userStatsPromise])
+            .then(([userStatsSnap]) =>{
+                const userStats = userStatsSnap.data();
+                const learnedTasks : string[] = userStats.tasksStats;
+                learnedTasks.push(task);
+                updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)), { tasksStats: learnedTasks });
+
+            });    
+
+          
+    }        
+    static async getUserQuizTask(userId : string): Promise<QuizTask[]>{
+        const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) =>{
+                const userStats = userStatsSnap.data();
+                const learnedTasks : string[] = userStats.tasksStats
+                const quizTasks : QuizTask[] = [];
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id) ) {
+                        quizTasks.push({
+                            answers: gameData.answers,
+                            category: gameData.category,
+                            dificulty_level: gameData.difficulty_level,
+                            phraseology: gameData.phraseology,
+                            type: gameData.type,
+                            id: task.id
+                        });
+                    }
+                });
+            return quizTasks;    
+
+            }
+            )
+    }
+
 
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
