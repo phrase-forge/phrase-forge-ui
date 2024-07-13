@@ -1,4 +1,4 @@
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import { StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../../styles/Colors";
 
@@ -8,6 +8,8 @@ interface CustomizedTextInputProps {
     description?: string;
     placeholder?: string;
     passwordInput?: boolean;
+    helperText?: string;
+    inputValidator?: () => boolean;
 }
 
 const styles = StyleSheet.create({
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
    }
 });
 
-export const CustomizedTextInput = ({ value, valueSetter, description, placeholder, passwordInput }: CustomizedTextInputProps) => {
+export const CustomizedTextInput = ({ value, valueSetter, description, placeholder, passwordInput, helperText, inputValidator }: CustomizedTextInputProps) => {
     return (<View>
         <Text style={styles.inputLabel}>{description}</Text>
         <TextInput
@@ -31,5 +33,11 @@ export const CustomizedTextInput = ({ value, valueSetter, description, placehold
             onChangeText={(newValue) => valueSetter(newValue)}
             secureTextEntry={passwordInput}
         />
+        {helperText
+            ? <HelperText type="error" visible={inputValidator()}>
+                {helperText}
+            </HelperText>
+            : <></>
+        }
     </View>)
 }

@@ -25,7 +25,7 @@ export class UserService {
                 finishedTasksIds: []
         };
         const addUserPromise = setDoc(doc(db, DATABASE_TABLE_NAME.USERS, user.uid), userDoc);
-        const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc)
+        const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc);
         return Promise.all([addUserPromise, addUserStatPromise]);
     }
     static async addTaskToUserStats(userId : string, task:string) {
@@ -37,20 +37,20 @@ export class UserService {
                 learnedTasks.push(task);
                 updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)), { finishedTasksIds: learnedTasks });
 
-            });    
+            });
 
-          
-    }        
+
+    }
     static async getUserQuizTask(userId: string): Promise<QuizTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-    
+
         return Promise.all([userStatsPromise, taskPromise])
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
                 const quizTasks: QuizTask[] = [];
-    
+
                 tasks.forEach(task => {
                     const gameData = task.data();
                     if (gameData.type === "quiz" && !learnedTasks.includes(task.id)) {
@@ -70,13 +70,13 @@ export class UserService {
     static async getUserTranslateTask(userId: string): Promise<TranslateTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-    
+
         return Promise.all([userStatsPromise, taskPromise])
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
                 const translateTasks: TranslateTask[] = [];
-    
+
                 tasks.forEach(task => {
                     const gameData = task.data();
                     if (gameData.type === "translate" && !learnedTasks.includes(task.id)) {
@@ -97,13 +97,13 @@ export class UserService {
     static async getUserGapsTask(userId: string): Promise<GapsTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-    
+
         return Promise.all([userStatsPromise, taskPromise])
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
                 const gapsTasks: GapsTask[] = [];
-    
+
                 tasks.forEach(task => {
                     const gameData = task.data();
                     if (gameData.type === "gaps" && !learnedTasks.includes(task.id)) {
@@ -125,13 +125,13 @@ export class UserService {
     static async getUserPicturesTask(userId: string): Promise<PicturesTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-    
+
         return Promise.all([userStatsPromise, taskPromise])
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
                 const picturesTasks: PicturesTask[] = [];
-    
+
                 tasks.forEach(task => {
                     const gameData = task.data();
                     if (gameData.type === "pictures" && !learnedTasks.includes(task.id)) {
@@ -153,13 +153,13 @@ export class UserService {
     static async getUserPairsTask(userId: string): Promise<PairsTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-    
+
         return Promise.all([userStatsPromise, taskPromise])
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
                 const pairsTasks: PairsTask[] = [];
-    
+
                 tasks.forEach(task => {
                     const gameData = task.data();
                     if (gameData.type === "pairs" && !learnedTasks.includes(task.id)) {
@@ -171,7 +171,7 @@ export class UserService {
                             pair1: gameData.pair1,
                             pair2: gameData.pair2,
                             pair3: gameData.pair3,
-                            
+
                         });
                     }
                 });
@@ -204,6 +204,11 @@ export class UserService {
             });
     }
 
+    static saveUserPreferences(userId: string, preferences: UserPreferences): Promise<void> {
+        const updateRef = doc(db, DATABASE_TABLE_NAME.USERS, userId);
+        return updateDoc(updateRef, { preferences });
+    }
+
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
@@ -212,6 +217,7 @@ export class UserService {
             .then(([userStatsSnap, games]) => {
                 const gameStats: GameStatistic[] = [];
                 const userStats = userStatsSnap.data();
+
                 games.forEach(gameRef => {
                     const gameData = gameRef.data();
                     gameStats.push({
@@ -220,12 +226,12 @@ export class UserService {
                         maxScore: gameData.tasks
                     });
                 });
-                gameStats.sort((s1, s2) => s2.currentScore - s1.currentScore)
+                gameStats.sort((s1, s2) => s2.currentScore - s1.currentScore);
 
                 const achievements = userStats?.achievements || [];
 
                 if (achievements) {
-                    achievements.sort((s1, s2) => s2.date - s1.date)
+                    achievements.sort((s1, s2) => s2.date - s1.date);
                 }
 
                 const finishedTasksIds = userStats?.finishedTasksIds || [];

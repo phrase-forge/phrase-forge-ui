@@ -8,17 +8,17 @@ interface NavbarProps {
     description?: string;
 }
 
-export const HomeNavbarComponent = ({title, description}: NavbarProps) => {
+export const HomeNavbarComponent = ({ title, description }: NavbarProps) => {
     return <View style={styles.headerContainer}>
         <View style={{ padding: 32 }}>
             <Text style={{ color: 'white', fontSize: 40, fontWeight: 'bold' }}>{title}</Text>
-            {description ? <Text style={{ color: 'white', fontSize: 16 }}>{description}</Text>: <></>}
+            {description ? <Text style={{ color: 'white', fontSize: 16 }}>{description}</Text> : <></>}
         </View>
         <View style={{ padding: 32 }}>
-            <CustomizedAvatar size='small'/>
+            <CustomizedAvatar size="small"/>
         </View>
-    </View>
-}
+    </View>;
+};
 
 
 const styles = StyleSheet.create({

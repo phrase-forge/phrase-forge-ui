@@ -40,7 +40,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
 
     return (
         <View style={{ flex: 1, }}>
-            <HomeNavbarComponent title={`Hi, ${user.username}`} description={"Let's start learning"}/>
+            <HomeNavbarComponent title={`Hi, ${user?.preferences?.username}`} description={"Let's start learning"}/>
             <ScrollView style={{ height: '100%', marginBottom: 100 }}>
                 <CustomizedCard>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

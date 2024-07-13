@@ -10,6 +10,7 @@ import { LoginLayout } from "./LoginLayout";
 import { UserService } from "../../services/UserService";
 import { LoadingContext } from "../../services/LoadingContext";
 import { ApplicationRoute } from "../../model/Routing";
+import { UserPreferencesView } from "../../views/UserPreferencesView";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,9 +28,10 @@ export const ApplicationLayout = () => {
 
                 const roles = data ? data.roles : [UserRole.USER];
                 const username = data && data.username || 'User';
-                const stats = userStats || {}
+                const preferences = data && data?.preferences;
+                const stats = userStats || {};
 
-                setUser({ user, roles, username, stats });
+                setUser({ user, roles, username, stats, preferences });
             })
             .catch(err => {
                 console.error(err);
@@ -48,16 +50,19 @@ export const ApplicationLayout = () => {
         });
     }, []);
 
+    const screenNavigator = () => {
+        if (user?.preferences) {
+            return <Stack.Screen name={ApplicationRoute.LOGGED_LAYOUT} component={LoggedUserLayout}/>
+        } else if (user) {
+            return <Stack.Screen name={ApplicationRoute.PREFERENCES} component={UserPreferencesView}/>
+        }
+        return <Stack.Screen name={ApplicationRoute.NOT_LOGGED_LAYOUT} component={LoginLayout}/>;
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName={ApplicationRoute.LOGIN} screenOptions={{ headerShown: false }}>
-                {
-                    user ? (
-                        <Stack.Screen name={ApplicationRoute.LOGGED_LAYOUT} component={LoggedUserLayout}/>
-                    ) : (
-                        <Stack.Screen name={ApplicationRoute.NOT_LOGGED_LAYOUT} component={LoginLayout}/>
-                    )
-                }
+                {screenNavigator()}
             </Stack.Navigator>
         </NavigationContainer>
     );
