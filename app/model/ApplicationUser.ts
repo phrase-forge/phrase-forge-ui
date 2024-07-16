@@ -13,6 +13,7 @@ export interface UserStats {
     achievements: UserAchievement[];
     commonStats: Map<string, string>;
     gameStats: GameStatistic[];
+    finishedTasksIds: string[];
 }
 
 export interface UserAchievement {
@@ -31,4 +32,17 @@ export enum UserRole {
     ADMIN = 'ADMIN',
     EDITOR = 'EDITOR',
     USER = 'USER'
+}
+export interface GameStatistic {
+    name: string;
+    currentScore: number;
+    maxScore: number;
+}
+export interface QuizTask{
+    answers: string[];
+    category: string;
+    difficultyLevel: number;
+    phraseology: string;
+    type: string;
+    id: string;
 }

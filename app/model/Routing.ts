@@ -12,10 +12,16 @@ export enum ApplicationRoute {
     GAMES = '/games',
     ACCOUNT = '/account',
     SETTINGS = '/settings',
+    GAME = '/game',
+    
 
     // games
     GAMES_VIEW = `${ApplicationRoute.GAMES}/list`,
-    QUIZ = `${ApplicationRoute.GAMES}/quiz`,
+
+    //game
+    
+    QUIZ = `${ApplicationRoute.GAME}/quiz`,
+    ENDGAME = `${ApplicationRoute.GAME}/endOfGame`,
 
     // account
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,

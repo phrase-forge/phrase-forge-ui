@@ -6,6 +6,7 @@ import { SettingsView } from "../../views/SettingsView";
 import { AccountView } from "../../views/AccountView";
 import { GamesLayout } from "./GamesLayout";
 
+
 const Stack = createNativeStackNavigator();
 
 export const LoggedUserLayout = () => {
