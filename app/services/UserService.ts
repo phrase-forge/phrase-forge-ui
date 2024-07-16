@@ -22,7 +22,7 @@ export class UserService {
                 achievements: [],
                 commonStats: {},
                 gameStats: {},
-                finishedTasksIds: {}
+                finishedTasksIds: []
         };
         const addUserPromise = setDoc(doc(db, DATABASE_TABLE_NAME.USERS, user.uid), userDoc);
         const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc)
