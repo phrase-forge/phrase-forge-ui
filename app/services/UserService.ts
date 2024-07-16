@@ -1,4 +1,4 @@
-import { GameStatistic, QuizTask, UserRole, UserStats } from "../model/ApplicationUser";
+import { GameStatistic, QuizTask, TranslateTask, UserRole, UserStats } from "../model/ApplicationUser";
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
@@ -65,6 +65,32 @@ export class UserService {
                     }
                 });
                 return quizTasks;
+            });
+    }
+    static async getUserTranslateTask(userId: string): Promise<TranslateTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const translateTasks: TranslateTask[] = [];
+    
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "translate" && !learnedTasks.includes(task.id)) {
+                        translateTasks.push({
+                            answer: gameData.answer,
+                            category: gameData.category,
+                            difficultyLevel: gameData.difficultyLevel,
+                            phraseology: gameData.phraseology,
+                            type: gameData.type,
+                            id: task.id
+                        });
+                    }
+                });
+                return translateTasks;
             });
     }
 

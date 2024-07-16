@@ -46,3 +46,11 @@ export interface QuizTask{
     type: string;
     id: string;
 }
+export interface TranslateTask{
+    answer: string;
+    category: string;
+    difficultyLevel: number;
+    phraseology: string;
+    type: string;
+    id: string;
+}
