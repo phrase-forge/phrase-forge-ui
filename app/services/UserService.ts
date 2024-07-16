@@ -21,7 +21,8 @@ export class UserService {
         const userStatDoc = {
                 achievements: [],
                 commonStats: {},
-                gameStats: {}
+                gameStats: {},
+                finishedTasksIds: {}
         };
         const addUserPromise = setDoc(doc(db, DATABASE_TABLE_NAME.USERS, user.uid), userDoc);
         const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc)
@@ -32,51 +33,51 @@ export class UserService {
         Promise.all([userStatsPromise])
             .then(([userStatsSnap]) =>{
                 const userStats = userStatsSnap.data();
-                const learnedTasks : string[] = userStats.tasksStats;
+                const learnedTasks : string[] = userStats.finishedTasksIds;
                 learnedTasks.push(task);
-                updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)), { tasksStats: learnedTasks });
+                updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)), { finishedTasksIds: learnedTasks });
 
             });    
 
           
     }        
-    static async getUserQuizTask(userId : string): Promise<QuizTask[]>{
-        const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)));
+    static async getUserQuizTask(userId: string): Promise<QuizTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
         return Promise.all([userStatsPromise, taskPromise])
-            .then(([userStatsSnap, tasks]) =>{
+            .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
-                const learnedTasks : string[] = userStats.tasksStats
-                const quizTasks : QuizTask[] = [];
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const quizTasks: QuizTask[] = [];
+    
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id) ) {
+                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id)) {
                         quizTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
-                            dificulty_level: gameData.difficulty_level,
+                            difficultyLevel: gameData.difficultyLevel,
                             phraseology: gameData.phraseology,
                             type: gameData.type,
                             id: task.id
                         });
                     }
                 });
-            return quizTasks;    
-
-            }
-            )
+                return quizTasks;
+            });
     }
 
 
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
+;
 
         return Promise.all([userStatsPromise, gamesPromise])
             .then(([userStatsSnap, games]) => {
                 const gameStats: GameStatistic[] = [];
                 const userStats = userStatsSnap.data();
-
                 games.forEach(gameRef => {
                     const gameData = gameRef.data();
                     gameStats.push({
@@ -92,17 +93,21 @@ export class UserService {
                 if (achievements) {
                     achievements.sort((s1, s2) => s2.date - s1.date)
                 }
+
+                const finishedTasksIds = userStats?.finishedTasksIds || [];
                 return {
                     commonStats: userStats?.commonStats || {},
                     achievements,
-                    gameStats
+                    gameStats,
+                    finishedTasksIds,
                 }
             }).catch((err) => {
                 console.log(err);
                 return {
                     commonStats: new Map(),
                     achievements: [],
-                    gameStats: []
+                    gameStats: [],
+                    finishedTasksIds: [],
                 }
             });
     }

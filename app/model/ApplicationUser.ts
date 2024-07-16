@@ -13,7 +13,7 @@ export interface UserStats {
     achievements: UserAchievement[];
     commonStats: Map<string, string>;
     gameStats: GameStatistic[];
-    tasksStats: string[];
+    finishedTasksIds: string[];
 }
 
 export interface UserAchievement {
@@ -41,7 +41,7 @@ export interface GameStatistic {
 export interface QuizTask{
     answers: string[];
     category: string;
-    dificulty_level: number;
+    difficultyLevel: number;
     phraseology: string;
     type: string;
     id: string;

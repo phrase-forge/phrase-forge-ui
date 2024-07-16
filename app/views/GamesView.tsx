@@ -10,12 +10,11 @@ import { ApplicationRoute } from "../model/Routing";
 import { ViewContainer } from "../component/ViewContainer";
 import React from "react";
 import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
-import Category from "../../components/Category";
 import { DEFAULT_COLORS } from "../styles/Colors";
 
 export const GamesView = ({ navigation }) => {
   const onNavigationChange = (route: ApplicationRoute) => {
-    navigation.navigate(ApplicationRoute.QUIZ, { screen: route});
+    navigation.navigate(ApplicationRoute.GAME, { screen: route});
   };
 
   return (
