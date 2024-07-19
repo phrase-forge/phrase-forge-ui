@@ -29,14 +29,14 @@ export const GamesView = ({ navigation }) => {
             >
               <Text style={styles.buttonText}>Quiz</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.PICTURES_VIEW)}>
               <Text style={styles.buttonText}>Pictures</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.PAIRS_VIEW)}>
               <Text style={styles.buttonText}>Pairs</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Gaps</Text>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.GAPS_VIEW)}>
+              <Text style={styles.buttonText} >Gaps</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Sequence</Text>

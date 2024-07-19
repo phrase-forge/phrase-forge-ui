@@ -8,27 +8,43 @@ interface NavbarProps {
     description?: string;
 }
 
-
-export const GameNavbarComponent = ({title, description}: NavbarProps) => {
-    return <View style={styles.headerContainer}>
-        <View style={{ padding: 32 }}>
-            <Text style={{ color: DEFAULT_COLORS.primaryDark, fontSize: 40, fontWeight: 'bold' }}>{title}</Text>
-            {description ? <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 16 }}>{description}</Text>: <></>}
+export const GameNavbarComponent = ({ title, description }: NavbarProps) => {
+    return (
+        <View style={styles.headerContainer}>
+            <View style={styles.textContainer}>
+                <Text style={styles.title}>{title}</Text>
+                {description ? <Text style={styles.description}>{description}</Text> : null}
+            </View>
+            <View style={styles.avatarContainer}>
+                <CustomizedAvatar size='small' />
+            </View>
         </View>
-        <View style={{ padding: 32 }}>
-            <CustomizedAvatar size='small'/>
-        </View>
-    </View>
+    );
 }
-
 
 const styles = StyleSheet.create({
     headerContainer: {
         height: 150,
         justifyContent: 'space-between',
         alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'row', 
-        backgroundColor:DEFAULT_COLORS.primaryWhite
+        flexDirection: 'row',
+        backgroundColor: DEFAULT_COLORS.primaryWhite,
+    },
+    textContainer: {
+        padding: 32,
+        width: '70%',
+    },
+    avatarContainer: {
+        padding: 32,
+    },
+    title: {
+        color: DEFAULT_COLORS.primaryDark,
+        fontSize: 40,
+        fontWeight: 'bold',
+    },
+    description: {
+        color: DEFAULT_COLORS.primaryGray,
+        fontSize: 16,
+        flexWrap: 'wrap',
     },
 });

@@ -14,6 +14,9 @@ export enum ApplicationRoute {
     SETTINGS = '/settings',
     QUIZ_VIEW = '/quiz_view',
     TRANSLATE_VIEW = '/translate_view',
+    GAPS_VIEW = '/gaps_view',
+    PICTURES_VIEW = '/pictures_view',
+    PAIRS_VIEW = '/pairs_view',
     
 
     // games
@@ -24,6 +27,9 @@ export enum ApplicationRoute {
     QUIZ = `${ApplicationRoute.GAMES}/quiz`,
     TRANSLATE = `${ApplicationRoute.GAMES}/translate`,
     ENDGAME = `${ApplicationRoute.GAMES}/endOfGame`,
+    GAPS = `${ApplicationRoute.GAMES}/gaps`,
+    PICTURES = `${ApplicationRoute.GAMES}/pictures`,
+    PAIRS = `${ApplicationRoute.GAMES}/pairs`,
 
     // account
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,

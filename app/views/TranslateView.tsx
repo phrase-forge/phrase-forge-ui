@@ -20,14 +20,16 @@ import EndOfGameView from "./EndOfGameView";
 
 export const TranslateView = ({ navigation }) => {
   const { user } = useContext(UserContext);
-  const [translateTasks, setTranslateTasks] = useState<TranslateTask[] | null>(null);
+  const [translateTasks, setTranslateTasks] = useState<TranslateTask[] | null>(
+    null
+  );
   const [number, setNumber] = useState(0);
   const [taskToRemove, setTaskToRemove] = useState(0);
   const [userTranslation, setUserTranslation] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackColor, setFeedbackColor] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -45,7 +47,7 @@ export const TranslateView = ({ navigation }) => {
     }
     setFeedbackMessage("");
     setCorrectAnswer("");
-    setIsSubmitted(false); 
+    setIsSubmitted(false);
     if (translateTasks.length === 0) {
       navigation.replace(ApplicationRoute.ENDGAME);
     }
@@ -59,16 +61,16 @@ export const TranslateView = ({ navigation }) => {
       setTaskToRemove(1);
       setFeedbackMessage("Correct answer!");
       setFeedbackColor("green");
-      setCorrectAnswer(""); 
+      setCorrectAnswer("");
       UserService.addTaskToUserStats(user.user.uid, translateTasks[number].id);
     } else {
       setFeedbackMessage("Unfortunately, that's the wrong answer.");
       setFeedbackColor("red");
-      setCorrectAnswer(answer); 
+      setCorrectAnswer(answer);
     }
     setUserTranslation("");
     Keyboard.dismiss();
-    setIsSubmitted(true); 
+    setIsSubmitted(true);
   };
 
   useEffect(() => {
@@ -99,11 +101,15 @@ export const TranslateView = ({ navigation }) => {
             />
             <View style={styles.quiz}>
               <View style={styles.quizQuestion}>
-                <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 20 }}>
+                <Text
+                  style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 20 }}
+                >
                   {translateTasks[number].phraseology}
                 </Text>
               </View>
-              <Text style={styles.inputLabel}>Enter your translation below:</Text>
+              <Text style={styles.inputLabel}>
+                Enter your translation below:
+              </Text>
               <TextInput
                 style={styles.input}
                 placeholder="Enter your translation"
@@ -111,8 +117,11 @@ export const TranslateView = ({ navigation }) => {
                 onChangeText={setUserTranslation}
                 multiline={true}
               />
-              {!isSubmitted && ( 
-                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+              {!isSubmitted && (
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleSubmit}
+                >
                   <Text style={styles.submitButtonText}>Submit</Text>
                 </TouchableOpacity>
               )}
@@ -122,7 +131,13 @@ export const TranslateView = ({ navigation }) => {
               >
                 <Text style={styles.navigationButtonText}>Next question</Text>
               </TouchableOpacity>
-              <Text style={{ color: feedbackColor, fontSize: 19, marginVertical: 10 }}>
+              <Text
+                style={{
+                  color: feedbackColor,
+                  fontSize: 19,
+                  marginVertical: 10,
+                }}
+              >
                 {feedbackMessage}
               </Text>
               {correctAnswer && (
@@ -167,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: DEFAULT_COLORS.primaryGray,
     marginBottom: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   input: {
     width: "100%",
@@ -178,7 +193,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 20,
     backgroundColor: DEFAULT_COLORS.primaryWhite,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   submitButton: {
     width: "50%",
