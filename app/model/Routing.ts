@@ -12,16 +12,24 @@ export enum ApplicationRoute {
     GAMES = '/games',
     ACCOUNT = '/account',
     SETTINGS = '/settings',
-    GAME = '/game',
+    QUIZ_VIEW = '/quiz_view',
+    TRANSLATE_VIEW = '/translate_view',
+    GAPS_VIEW = '/gaps_view',
+    PICTURES_VIEW = '/pictures_view',
+    PAIRS_VIEW = '/pairs_view',
     
 
     // games
     GAMES_VIEW = `${ApplicationRoute.GAMES}/list`,
 
     //game
-    
-    QUIZ = `${ApplicationRoute.GAME}/quiz`,
-    ENDGAME = `${ApplicationRoute.GAME}/endOfGame`,
+
+    QUIZ = `${ApplicationRoute.GAMES}/quiz`,
+    TRANSLATE = `${ApplicationRoute.GAMES}/translate`,
+    ENDGAME = `${ApplicationRoute.GAMES}/endOfGame`,
+    GAPS = `${ApplicationRoute.GAMES}/gaps`,
+    PICTURES = `${ApplicationRoute.GAMES}/pictures`,
+    PAIRS = `${ApplicationRoute.GAMES}/pairs`,
 
     // account
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,

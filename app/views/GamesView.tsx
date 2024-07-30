@@ -14,7 +14,7 @@ import { DEFAULT_COLORS } from "../styles/Colors";
 
 export const GamesView = ({ navigation }) => {
   const onNavigationChange = (route: ApplicationRoute) => {
-    navigation.navigate(ApplicationRoute.GAME, { screen: route});
+    navigation.navigate(route);
   };
 
   return (
@@ -25,23 +25,23 @@ export const GamesView = ({ navigation }) => {
           <View style={styles.gamesContainer}>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => onNavigationChange(ApplicationRoute.GAMES_VIEW)}
+              onPress={() => onNavigationChange(ApplicationRoute.QUIZ_VIEW)}
             >
               <Text style={styles.buttonText}>Quiz</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.PICTURES_VIEW)}>
               <Text style={styles.buttonText}>Pictures</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.PAIRS_VIEW)}>
               <Text style={styles.buttonText}>Pairs</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Gaps</Text>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.GAPS_VIEW)}>
+              <Text style={styles.buttonText} >Gaps</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Sequence</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.TRANSLATE_VIEW)}>
               <Text style={styles.buttonText}>Translate</Text>
             </TouchableOpacity>
           </View>

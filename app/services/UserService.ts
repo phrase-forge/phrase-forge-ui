@@ -1,4 +1,4 @@
-import { GameStatistic, QuizTask, UserRole, UserStats } from "../model/ApplicationUser";
+import { GameStatistic, GapsTask, PairsTask, PicturesTask, QuizTask, TranslateTask, UserRole, UserStats } from "../model/ApplicationUser";
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
@@ -65,6 +65,117 @@ export class UserService {
                     }
                 });
                 return quizTasks;
+            });
+    }
+    static async getUserTranslateTask(userId: string): Promise<TranslateTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const translateTasks: TranslateTask[] = [];
+    
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "translate" && !learnedTasks.includes(task.id)) {
+                        translateTasks.push({
+                            answer: gameData.answer,
+                            category: gameData.category,
+                            difficultyLevel: gameData.difficultyLevel,
+                            phraseology: gameData.phraseology,
+                            type: gameData.type,
+                            id: task.id
+                        });
+                    }
+                });
+                return translateTasks;
+            });
+    }
+
+    static async getUserGapsTask(userId: string): Promise<GapsTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const gapsTasks: GapsTask[] = [];
+    
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "gaps" && !learnedTasks.includes(task.id)) {
+                        gapsTasks.push({
+                            answers: gameData.answers,
+                            category: gameData.category,
+                            difficultyLevel: gameData.difficultyLevel,
+                            phraseology: gameData.phraseology,
+                            type: gameData.type,
+                            id: task.id,
+                            gaps: gameData.gaps
+                        });
+                    }
+                });
+                return gapsTasks;
+            });
+    }
+
+    static async getUserPicturesTask(userId: string): Promise<PicturesTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const picturesTasks: PicturesTask[] = [];
+    
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "pictures" && !learnedTasks.includes(task.id)) {
+                        picturesTasks.push({
+                            answers: gameData.answers,
+                            category: gameData.category,
+                            difficultyLevel: gameData.difficultyLevel,
+                            phraseology: gameData.phraseology,
+                            type: gameData.type,
+                            id: task.id,
+                            photo: gameData.photo
+                        });
+                    }
+                });
+                return picturesTasks;
+            });
+    }
+
+    static async getUserPairsTask(userId: string): Promise<PairsTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+    
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const pairsTasks: PairsTask[] = [];
+    
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "pairs" && !learnedTasks.includes(task.id)) {
+                        pairsTasks.push({
+                            category: gameData.category,
+                            difficultyLevel: gameData.difficultyLevel,
+                            type: gameData.type,
+                            id: task.id,
+                            pair1: gameData.pair1,
+                            pair2: gameData.pair2,
+                            pair3: gameData.pair3,
+                            
+                        });
+                    }
+                });
+                return pairsTasks;
             });
     }
 

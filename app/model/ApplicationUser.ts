@@ -46,3 +46,39 @@ export interface QuizTask{
     type: string;
     id: string;
 }
+export interface TranslateTask{
+    answer: string;
+    category: string;
+    difficultyLevel: number;
+    phraseology: string;
+    type: string;
+    id: string;
+}
+export interface GapsTask{
+    answers: string[];
+    category: string;
+    difficultyLevel: number;
+    phraseology: string;
+    type: string;
+    gaps: string;
+    id: string;
+}
+
+export interface PicturesTask{
+    answers: string[];
+    category: string;
+    difficultyLevel: number;
+    phraseology: string;
+    type: string;
+    id: string;
+    photo: string;
+}
+export interface PairsTask{
+    category: string;
+    difficultyLevel: number;
+    type: string;
+    id: string;
+    pair1: string[];
+    pair2: string[];
+    pair3: string[];
+}
