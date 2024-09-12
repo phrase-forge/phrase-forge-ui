@@ -38,7 +38,7 @@ export const GamesView = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.GAPS_VIEW)}>
               <Text style={styles.buttonText} >Gaps</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.SEQUENCE_VIEW)}>
               <Text style={styles.buttonText}>Sequence</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={() => onNavigationChange(ApplicationRoute.TRANSLATE_VIEW)}>

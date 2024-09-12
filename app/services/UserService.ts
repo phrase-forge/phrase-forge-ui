@@ -1,4 +1,4 @@
-import { GameStatistic, GapsTask, PairsTask, PicturesTask, QuizTask, TranslateTask, UserRole, UserStats } from "../model/ApplicationUser";
+import { GameStatistic, GapsTask, PairsTask, PicturesTask, QuizTask, SequenceTask, TranslateTask, UserRole, UserStats} from "../model/ApplicationUser";
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
@@ -179,11 +179,34 @@ export class UserService {
             });
     }
 
+    static async getUserSequenceTask(userId: string): Promise<SequenceTask[]> {
+        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
+        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
+
+        return Promise.all([userStatsPromise, taskPromise])
+            .then(([userStatsSnap, tasks]) => {
+                const userStats = userStatsSnap.data();
+                const learnedTasks: string[] = userStats.finishedTasksIds;
+                const sequenceTask: SequenceTask[] = [];
+
+                tasks.forEach(task => {
+                    const gameData = task.data();
+                    if (gameData.type === "sequence" && !learnedTasks.includes(task.id)) {
+                        sequenceTask.push({
+                            id: task.id,
+                            type: gameData.type,
+                            words: gameData.words,
+                            meaning: gameData.meaning
+                        });
+                    }
+                });
+                return sequenceTask;
+            });
+    }
 
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
-;
 
         return Promise.all([userStatsPromise, gamesPromise])
             .then(([userStatsSnap, games]) => {

@@ -17,19 +17,20 @@ export enum ApplicationRoute {
     GAPS_VIEW = '/gaps_view',
     PICTURES_VIEW = '/pictures_view',
     PAIRS_VIEW = '/pairs_view',
+    SEQUENCE_VIEW = '/sequence_view',
     
 
     // games
     GAMES_VIEW = `${ApplicationRoute.GAMES}/list`,
 
     //game
-
     QUIZ = `${ApplicationRoute.GAMES}/quiz`,
     TRANSLATE = `${ApplicationRoute.GAMES}/translate`,
     ENDGAME = `${ApplicationRoute.GAMES}/endOfGame`,
     GAPS = `${ApplicationRoute.GAMES}/gaps`,
     PICTURES = `${ApplicationRoute.GAMES}/pictures`,
     PAIRS = `${ApplicationRoute.GAMES}/pairs`,
+    SEQUENCE = `${ApplicationRoute.GAMES}/sequence`,
 
     // account
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,
