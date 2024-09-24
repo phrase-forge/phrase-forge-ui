@@ -82,3 +82,10 @@ export interface PairsTask{
     pair2: string[];
     pair3: string[];
 }
+
+export interface SequenceTask {
+    meaning: string;
+    type: string;
+    id: string;
+    words: string[];
+}
