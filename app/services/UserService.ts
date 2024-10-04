@@ -1,4 +1,15 @@
-import { GameStatistic, GapsTask, PairsTask, PicturesTask, QuizTask, SequenceTask, TranslateTask, UserRole, UserStats} from "../model/ApplicationUser";
+import {
+    GameStatistic,
+    GapsTask,
+    PairsTask,
+    PicturesTask,
+    QuizTask,
+    SequenceTask,
+    TranslateTask,
+    UserPreferences,
+    UserRole,
+    UserStats
+} from "../model/ApplicationUser";
 import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
