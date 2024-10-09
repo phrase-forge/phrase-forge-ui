@@ -92,9 +92,11 @@ export const SequenceView = ({navigation}) => {
                         {sequenceTasks && sequenceTasks.length > 0 ? (
                             sequenceTasks[number] && sequenceTasks[number].words.length > 0 ? (
                                 <>
-                                    <Text style={styles.meaningText}>
-                                        {sequenceTasks[number].meaning}
-                                    </Text>
+                                    <View style={styles.quizQuestion}>
+                                        <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 20 }}>
+                                            {sequenceTasks[number].meaning}
+                                        </Text>
+                                    </View>
 
                                     {sequenceTasks[number].words.map((word, index) => (
                                         <TouchableOpacity
@@ -115,9 +117,16 @@ export const SequenceView = ({navigation}) => {
 
                         {hasError && (
                             <Text style={styles.meaningText}>
-                                Niestety, poprawna kolejność to: {sequenceTasksCorrectOrder[number].words.join(' ')}.
+                                Niestety, poprawna kolejność to:
                             </Text>
                         )}
+
+                        {hasError && (
+                            <Text style={[styles.quizQuestion, { color: DEFAULT_COLORS.primaryGray, fontSize: 20 }]}>
+                                {sequenceTasksCorrectOrder[number].words.join(' ')}
+                            </Text>
+                        )}
+
                         <TouchableOpacity style={styles.navigationButton} onPress={() => onNavigationChange()}>
                             <Text style={styles.navigationButtonText}>Next question</Text>
                         </TouchableOpacity>
@@ -144,6 +153,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         padding: 20,
+    },
+    quizQuestion: {
+        width: "100%",
+        padding: 20,
+        backgroundColor: DEFAULT_COLORS.primaryPink,
+        textAlign: "center",
+        borderRadius: 8,
+        marginBottom: 20,
+        alignItems: "center",
     },
     meaningText: {
         fontSize: 18,
