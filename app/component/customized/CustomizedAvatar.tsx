@@ -2,14 +2,13 @@ import { Image, StyleSheet, View } from "react-native";
 import React from "react";
 
 export const CustomizedAvatar = ({ size = 'medium' }) => {
-    return <View style={styles.container}>
+    return <View>
         <Image style={size === 'medium' ? styles.imageMedium : styles.imageSmall}
                source={require('../../../assets/user.png')}></Image>
     </View>;
 };
 
 const styles = StyleSheet.create({
-    container: {},
     imageMedium: {
         width: 75,
         height: 75,

@@ -3,7 +3,7 @@ import firebase from "firebase/compat";
 import Timestamp = firebase.firestore.Timestamp;
 
 export interface ApplicationUser {
-    user: User   | null;
+    user: User  | null;
     roles?: UserRole[];
     stats?: UserStats;
     preferences?: UserPreferences;
