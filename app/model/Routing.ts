@@ -6,6 +6,7 @@ export enum ApplicationRoute {
     NOT_LOGGED_LAYOUT = 'Not Logged',
     LOGIN = 'Login',
     REGISTER = 'Register',
+    PREFERENCES = 'Preferences',
 
     // base path
     HOME = '/home',

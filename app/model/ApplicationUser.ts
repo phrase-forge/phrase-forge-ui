@@ -3,11 +3,45 @@ import firebase from "firebase/compat";
 import Timestamp = firebase.firestore.Timestamp;
 
 export interface ApplicationUser {
-    user: User | null;
+    user: User  | null;
     roles?: UserRole[];
-    username?: string;
     stats?: UserStats;
+    preferences?: UserPreferences;
 }
+
+export type UserPreferences = {
+    username: string,
+    language: Language,
+    level: Level,
+    notificationSettings: NotificationSettings,
+    soundSettings: SoundSettings
+};
+
+export enum Language {
+    ENGLISH = 'EN',
+    POLISH = 'PL',
+}
+
+export enum Level {
+    EASY = 'Easy',
+    MEDIUM = 'Medium',
+    ADVANCED = 'Advanced'
+}
+
+export type Settings = {
+    enable: boolean
+}
+
+export type NotificationSettings = Settings;
+
+// 0-100
+export type VolumeRange = Range<101>;
+export type SoundSettings =
+    | { enable: true, volume: VolumeRange }
+    | { enable: false, volume?: VolumeRange };
+
+type Range<N extends number, Acc extends number[] = []> =
+    Acc['length'] extends N ? Acc[number] : Range<N, [...Acc, Acc['length']]>;
 
 export interface UserStats {
     achievements: UserAchievement[];
