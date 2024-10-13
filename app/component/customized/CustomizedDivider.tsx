@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },
 })
 
-export const CustomizedDivider = ({text, inputStyles}) => {
+export const CustomizedDivider = ({text, inputStyles = {}}) => {
     return (
         <View style={[styles.container, inputStyles]}>
             <View style={styles.dividerLine}/>
