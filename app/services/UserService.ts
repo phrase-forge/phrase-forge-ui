@@ -1,4 +1,5 @@
 import {
+    ApplicationUser,
     GameStatistic,
     GapsTask,
     PairsTask,
@@ -17,6 +18,9 @@ import { User } from "firebase/auth";
 
 
 export class UserService {
+
+    static userPreferences: UserPreferences
+
     static getUserDataById(userId: string) {
         return Promise.all([
             getDoc((doc(db, DATABASE_TABLE_NAME.USERS, userId))),
@@ -30,28 +34,30 @@ export class UserService {
             roles: [UserRole.USER]
         };
         const userStatDoc = {
-                achievements: [],
-                commonStats: {},
-                gameStats: {},
-                finishedTasksIds: []
+            achievements: [],
+            commonStats: {},
+            gameStats: {},
+            finishedTasksIds: []
         };
         const addUserPromise = setDoc(doc(db, DATABASE_TABLE_NAME.USERS, user.uid), userDoc);
         const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc);
         return Promise.all([addUserPromise, addUserStatPromise]);
     }
-    static async addTaskToUserStats(userId : string, task:string) {
-        const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)));
+
+    static async addTaskToUserStats(userId: string, task: string) {
+        const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         Promise.all([userStatsPromise])
-            .then(([userStatsSnap]) =>{
+            .then(([userStatsSnap]) => {
                 const userStats = userStatsSnap.data();
-                const learnedTasks : string[] = userStats.finishedTasksIds;
+                const learnedTasks: string[] = userStats.finishedTasksIds;
                 learnedTasks.push(task);
-                updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS,userId)), { finishedTasksIds: learnedTasks });
+                updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)), {finishedTasksIds: learnedTasks});
 
             });
 
 
     }
+
     static async getUserQuizTask(userId: string): Promise<QuizTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
@@ -64,7 +70,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         quizTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -78,6 +84,7 @@ export class UserService {
                 return quizTasks;
             });
     }
+
     static async getUserTranslateTask(userId: string): Promise<TranslateTask[]> {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
@@ -90,7 +97,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "translate" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "translate" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         translateTasks.push({
                             answer: gameData.answer,
                             category: gameData.category,
@@ -117,7 +124,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "gaps" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "gaps" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         gapsTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -145,7 +152,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "pictures" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "pictures" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         picturesTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -173,7 +180,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "pairs" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "pairs" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         pairsTasks.push({
                             category: gameData.category,
                             difficultyLevel: gameData.difficultyLevel,
@@ -202,7 +209,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "sequence" && !learnedTasks.includes(task.id)) {
+                    if (gameData.type === "sequence" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
                         sequenceTask.push({
                             id: task.id,
                             type: gameData.type,
@@ -217,7 +224,7 @@ export class UserService {
 
     static saveUserPreferences(userId: string, preferences: UserPreferences): Promise<void> {
         const updateRef = doc(db, DATABASE_TABLE_NAME.USERS, userId);
-        return updateDoc(updateRef, { preferences });
+        return updateDoc(updateRef, {preferences});
     }
 
     static async getUserStatistics(userId: string): Promise<UserStats> {
@@ -260,6 +267,20 @@ export class UserService {
                     gameStats: [],
                     finishedTasksIds: [],
                 }
+            });
+    }
+
+    static async getUserPreferences(userId: string): Promise<UserPreferences> {
+        const userPromise = getDoc(doc(db, DATABASE_TABLE_NAME.USERS, userId));
+
+        return Promise.all([userPromise])
+            .then(([userSnap]) => {
+                const userData = userSnap.data() as ApplicationUser;
+                return userData.preferences;
+            })
+            .catch((error) => {
+                console.error('Error fetching user preferences:', error);
+                throw error;
             });
     }
 }
