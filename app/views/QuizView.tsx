@@ -28,6 +28,7 @@ export const QuizView = ({ navigation }) => {
   const [number, setNumber] = useState(0);
   const [taskToRemove, setTaskToRemove] = useState(0);
   const [score, setScore] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
 
   const onNavigationChange = () => {
@@ -61,17 +62,19 @@ export const QuizView = ({ navigation }) => {
       if (index == correctAnswerIndex) {
         newColors[index] = "green";
         isCorrectAnswer = true;
+        setStreak(streak + 1);
 
         UserService.addTaskToUserStats(user.user.uid, quizTasks[number].id);
         setTaskToRemove(1);
       } else {
         newColors[index] = "red";
         newColors[correctAnswerIndex] = "green";
+        setStreak(0);
       }
       setOptionColors(newColors);
       setSelectedOption(index);
 
-      const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score);
+      const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
       setScore(newScore);
       GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.QUIZ);
     }

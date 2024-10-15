@@ -5,9 +5,14 @@ export class GameScoreHelper {
     static calculatePointsForAnswer(
         isCorrectAnswer: boolean,
         currentPoints: number,
-        increment: number = 10
+        streak: number,
+        baseIncrement: number = 10,
+        streakMultiplier: number = 2
     ): number {
+        let increment = baseIncrement;
+
         if (isCorrectAnswer) {
+            increment = baseIncrement + streak * streakMultiplier;
             return currentPoints + increment;
         }
         return currentPoints;

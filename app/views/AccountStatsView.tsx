@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../styles/Colors";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../services/UserContext";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
 import { MD3Colors, ProgressBar } from "react-native-paper";
+import { UserService } from "../services/UserService";
 
 const StatCard = ({ title, value }) => {
     return <View style={styles.infoCard}>
@@ -23,7 +24,34 @@ const StatCard = ({ title, value }) => {
 
 
 export const AccountStatsView = () => {
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    useEffect(() => {
+        const fetchUserStats = async () => {
+            try {
+                const userId = user.user.uid;
+                const userStats = await UserService.getUserStatistics(userId);
+                setUser(prevUser => ({
+                    ...prevUser,
+                    stats: userStats
+                }));
+                setIsLoading(false);
+            } catch (e) {
+                console.error(e);
+                setIsLoading(false);
+            }
+        };
+
+        fetchUserStats();
+    }, [user?.user.uid]);
+
+    if (isLoading) {
+        return <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={DEFAULT_COLORS.primaryDark} />
+        </View>
+    }
+
     const { commonStats, gameStats } = user.stats;
 
     return <View>
@@ -100,5 +128,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 3,
 
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20
     }
 });
