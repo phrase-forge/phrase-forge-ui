@@ -94,7 +94,7 @@ export const QuizView = ({ navigation }) => {
   }
 
   if (quizTasks.length < 1) {
-    return <EndOfGameView score={score}></EndOfGameView>;
+    return <EndOfGameView></EndOfGameView>;
   }
 
   return (

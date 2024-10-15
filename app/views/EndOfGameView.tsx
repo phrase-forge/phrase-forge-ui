@@ -6,7 +6,7 @@ import { ViewContainer } from "../component/ViewContainer";
 import { useNavigation } from "@react-navigation/native";
 
 // eslint-disable-next-line react/prop-types
-export const EndOfGameView = ({score}) => {
+export const EndOfGameView = () => {
   const navigation = useNavigation();
 
   const onNavigationChange = () => {
@@ -17,7 +17,7 @@ export const EndOfGameView = ({score}) => {
     <ViewContainer style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>
-          You finished all the tasks for this Game with score {score}!
+          You finished all the tasks for this Game!
         </Text>
         <TouchableOpacity style={styles.button} onPress={onNavigationChange}>
           <Text style={styles.buttonText}>Go to other games</Text>

@@ -294,8 +294,6 @@ export class UserService {
                     commonStats: updatedCommonStats,
                     achievements: updatedAchievements
                 });
-    
-                console.log(`Score and stats updated successfully for userId: ${userId}, gameKey: ${gameKey}`);
             } else {
                 console.error(`No such user statistics found for userId: ${userId}`);
             }
