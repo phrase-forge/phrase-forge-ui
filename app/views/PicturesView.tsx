@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ViewContainer } from "../component/ViewContainer";
@@ -10,6 +11,8 @@ import { PicturesTask } from "../model/ApplicationUser";
 import { ApplicationRoute } from "../model/Routing";
 import EndOfGameView from "./EndOfGameView";
 import ImageTaskView from "./ImageTaskView";
+import { GameScoreHelper } from "../helpers/GameScoreHelper";
+import { Games } from "../model/Games";
 
 export const PicturesView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -22,6 +25,8 @@ export const PicturesView = ({ navigation }) => {
   );
   const [number, setNumber] = useState(0);
   const [taskToRemove, setTaskToRemove] = useState(0);
+  const [score, setScore] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -48,17 +53,25 @@ export const PicturesView = ({ navigation }) => {
     if (selectedOption === null) {
       const correctAnswerIndex = picturesTasks[number].answers[2];
       const newColors = [...optionColors];
+      let isCorrectAnswer = false;
 
       if (index == correctAnswerIndex) {
+        isCorrectAnswer = true;
+        setStreak(streak + 1);
         newColors[index] = "green";
         UserService.addTaskToUserStats(user.user.uid, picturesTasks[number].id);
         setTaskToRemove(1);
       } else {
         newColors[index] = "red";
         newColors[correctAnswerIndex] = "green";
+        setStreak(0);
       }
       setOptionColors(newColors);
       setSelectedOption(index);
+
+      const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
+      setScore(newScore);
+      GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.PICTURES);
     }
   };
 

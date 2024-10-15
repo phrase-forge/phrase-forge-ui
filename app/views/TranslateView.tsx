@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import {
   Keyboard,
@@ -17,6 +18,8 @@ import { UserContext } from "../services/UserContext";
 import { TranslateTask } from "../model/ApplicationUser";
 import { ApplicationRoute } from "../model/Routing";
 import EndOfGameView from "./EndOfGameView";
+import { GameScoreHelper } from "../helpers/GameScoreHelper";
+import { Games } from "../model/Games";
 
 export const TranslateView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -30,6 +33,8 @@ export const TranslateView = ({ navigation }) => {
   const [feedbackColor, setFeedbackColor] = useState("");
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [score, setScore] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -56,8 +61,11 @@ export const TranslateView = ({ navigation }) => {
   const handleSubmit = () => {
     const answer = translateTasks[number].answer.toLowerCase().trim();
     const userAnswer = userTranslation.toLowerCase().trim();
+    let isCorrectAnswer = false;
 
     if (userAnswer === answer) {
+      isCorrectAnswer = true;
+      setStreak(streak + 1);
       setTaskToRemove(1);
       setFeedbackMessage("Correct answer!");
       setFeedbackColor("green");
@@ -67,10 +75,15 @@ export const TranslateView = ({ navigation }) => {
       setFeedbackMessage("Unfortunately, that's the wrong answer.");
       setFeedbackColor("red");
       setCorrectAnswer(answer);
+      setStreak(0);
     }
     setUserTranslation("");
     Keyboard.dismiss();
     setIsSubmitted(true);
+
+    const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
+    setScore(newScore);
+    GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.TRANSLATE);
   };
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, {useContext, useEffect, useState} from "react";
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {ViewContainer} from "../component/ViewContainer";
@@ -9,6 +10,8 @@ import {UserContext} from "../services/UserContext";
 import {SequenceTask} from "../model/ApplicationUser";
 import {ApplicationRoute} from "../model/Routing";
 import {shuffleArray} from "../utils/shuffleArray";
+import { GameScoreHelper } from "../helpers/GameScoreHelper";
+import { Games } from "../model/Games";
 
 export const SequenceView = ({navigation}) => {
 
@@ -21,6 +24,8 @@ export const SequenceView = ({navigation}) => {
     const [buttonColors, setButtonColors] = useState(null);
     const [disabledButtons, setDisabledButtons] = useState(null);
     const [hasError, setHasError] = useState(false);
+    const [score, setScore] = useState<number>(0);
+    const [streak, setStreak] = useState<number>(0);
 
     const onNavigationChange = () => {
         setHasError(false);
@@ -42,20 +47,29 @@ export const SequenceView = ({navigation}) => {
     };
 
     const handleOptionPress = (index) => {
+        let isCorrectAnswer = false;
+
         if (canClick === true) {
             const newColors = [...buttonColors];
             const newDisabledButtons = [...disabledButtons];
             if (sequenceTasks[number].words[index] === sequenceTasksCorrectOrder[number].words[correctAnswerChosenNumber]) {
                 newColors[index] = 'green';
                 newDisabledButtons[index] = true;
+                isCorrectAnswer = true;
+                setStreak(streak + 1);
             } else {
                 newColors[index] = "red";
                 setCanClick(false);
                 setHasError(true);
+                setStreak(0);
             }
             setButtonColors(newColors);
             setDisabledButtons(newDisabledButtons);
             setCorrectAnswerChosenNumber(correctAnswerChosenNumber + 1);
+
+            const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
+            setScore(newScore);
+            GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.SEQUENCE);
         }
     }
 

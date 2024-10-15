@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ViewContainer } from "../component/ViewContainer";
@@ -10,6 +11,8 @@ import { PairsTask } from "../model/ApplicationUser";
 import EndOfGameView from "./EndOfGameView";
 import { ApplicationRoute } from "../model/Routing";
 import {shuffleArray} from "../utils/shuffleArray";
+import { GameScoreHelper } from "../helpers/GameScoreHelper";
+import { Games } from "../model/Games";
 
 export const PairsView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -34,6 +37,8 @@ export const PairsView = ({ navigation }) => {
     useState<number>(0);
   const [matchedPairs, setMatchedPairs] = useState<Set<number>>(new Set());
   const [pressedIndex, setPressedIndex] = useState<number | null>(null);
+  const [score, setScore] = useState<number>(0);
+  const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
     const fetchQuizTasks = async () => {
@@ -119,12 +124,15 @@ export const PairsView = ({ navigation }) => {
   const handleOptionPress = (index: number) => {
     setPressedIndex(index);
     setErrorMessage(null);
+    let isCorrectAnswer = false;
     const newColors = [...optionColors];
     if (index % 2 === 0) {
       setSelectedFirstColumnOption(index);
     } else if (selectedFirstColumnOption !== null) {
       const pushed1 = combinedArray[selectedFirstColumnOption][1];
       if (pushed1 === combinedArray[index][1]) {
+        isCorrectAnswer = true;
+        setStreak(streak + 1);
         newColors[index] = DEFAULT_COLORS.primaryGray;
         newColors[selectedFirstColumnOption] = DEFAULT_COLORS.primaryGray;
         setOptionColors(newColors);
@@ -139,8 +147,13 @@ export const PairsView = ({ navigation }) => {
       } else {
         setErrorMessage("Incorrect pair. Please try again.");
         setSelectedFirstColumnOption(null);
+        setStreak(0);
       }
     }
+    const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
+    setScore(newScore);
+    GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.PAIRS);
+    
     setTimeout(() => setPressedIndex(null), 200);
   };
 
