@@ -8,6 +8,7 @@ import {UserService} from "../services/UserService";
 import {UserContext} from "../services/UserContext";
 import {SequenceTask} from "../model/ApplicationUser";
 import {ApplicationRoute} from "../model/Routing";
+import {shuffleArray} from "../utils/shuffleArray";
 
 export const SequenceView = ({navigation}) => {
 
@@ -32,14 +33,6 @@ export const SequenceView = ({navigation}) => {
             setDisabledButtons(Array(sequenceTasks[number + 1].words.length).fill(false));
             setCanClick(true);
         }
-    };
-
-    const shuffleArray = (array: string[]) => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
     };
 
     const shuffleAnswersInQuestions = (sequenceTasks) => {

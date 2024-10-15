@@ -9,6 +9,7 @@ import { UserContext } from "../services/UserContext";
 import { PairsTask } from "../model/ApplicationUser";
 import EndOfGameView from "./EndOfGameView";
 import { ApplicationRoute } from "../model/Routing";
+import {shuffleArray} from "../utils/shuffleArray";
 
 export const PairsView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -43,14 +44,6 @@ export const PairsView = ({ navigation }) => {
 
     fetchQuizTasks();
   }, []);
-
-  const shuffleArray = (array: unknown[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
 
   const shuffleOptions = (tasks: PairsTask[]) => {
     if (!tasks[number]) return;
@@ -230,6 +223,7 @@ const styles = StyleSheet.create({
   quizOption: {
     width: "48%",
     borderRadius: 8,
+    justifyContent: "center",
     alignItems: "center",
     marginBottom: 10,
     padding: 20,
