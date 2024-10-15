@@ -14,7 +14,10 @@ import { UserContext } from "../services/UserContext";
 import { QuizTask } from "../model/ApplicationUser";
 import { ApplicationRoute } from "../model/Routing";
 import EndOfGameView from "./EndOfGameView";
+import { GameScoreHelper } from "../helpers/GameScoreHelper";
+import { Games } from "../model/Games";
 
+// eslint-disable-next-line react/prop-types
 export const QuizView = ({ navigation }) => {
   const { user } = useContext(UserContext);
   const [quizTasks, setQuizTasks] = useState<QuizTask[] | null>(null);
@@ -24,6 +27,8 @@ export const QuizView = ({ navigation }) => {
   );
   const [number, setNumber] = useState(0);
   const [taskToRemove, setTaskToRemove] = useState(0);
+  const [score, setScore] = useState<number>(0);
+
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -42,6 +47,7 @@ export const QuizView = ({ navigation }) => {
     setOptionColors(Array(4).fill(DEFAULT_COLORS.primaryBlue));
     setSelectedOption(null);
     if (quizTasks.length == 0) {
+      // eslint-disable-next-line react/prop-types
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };
@@ -50,9 +56,12 @@ export const QuizView = ({ navigation }) => {
     if (selectedOption === null) {
       const correctAnswerIndex = quizTasks[number].answers[4];
       const newColors = [...optionColors];
+      let isCorrectAnswer = false;
 
       if (index == correctAnswerIndex) {
         newColors[index] = "green";
+        isCorrectAnswer = true;
+
         UserService.addTaskToUserStats(user.user.uid, quizTasks[number].id);
         setTaskToRemove(1);
       } else {
@@ -61,6 +70,10 @@ export const QuizView = ({ navigation }) => {
       }
       setOptionColors(newColors);
       setSelectedOption(index);
+
+      const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score);
+      setScore(newScore);
+      GameScoreHelper.updateUserPoints(user.user.uid, newScore, Games.QUIZ);
     }
   };
 
@@ -78,7 +91,7 @@ export const QuizView = ({ navigation }) => {
   }
 
   if (quizTasks.length < 1) {
-    return <EndOfGameView></EndOfGameView>;
+    return <EndOfGameView score={score}></EndOfGameView>;
   }
 
   return (

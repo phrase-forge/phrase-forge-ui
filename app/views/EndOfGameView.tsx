@@ -5,7 +5,8 @@ import { ApplicationRoute } from "../model/Routing";
 import { ViewContainer } from "../component/ViewContainer";
 import { useNavigation } from "@react-navigation/native";
 
-export const EndOfGameView = () => {
+// eslint-disable-next-line react/prop-types
+export const EndOfGameView = ({score}) => {
   const navigation = useNavigation();
 
   const onNavigationChange = () => {
@@ -16,7 +17,7 @@ export const EndOfGameView = () => {
     <ViewContainer style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>
-          You finished all the tasks for this Game!
+          You finished all the tasks for this Game with score {score}!
         </Text>
         <TouchableOpacity style={styles.button} onPress={onNavigationChange}>
           <Text style={styles.buttonText}>Go to other games</Text>

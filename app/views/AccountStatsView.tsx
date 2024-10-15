@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../styles/Colors";
 import React, { useContext } from "react";

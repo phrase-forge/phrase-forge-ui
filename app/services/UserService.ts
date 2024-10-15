@@ -14,6 +14,7 @@ import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/fi
 import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
 import { User } from "firebase/auth";
+import { Games } from "../model/Games";
 
 
 export class UserService {
@@ -261,5 +262,45 @@ export class UserService {
                     finishedTasksIds: [],
                 }
             });
+    }
+
+    static async updateUserScore(userId: string, newScore: number, gameKey: Games): Promise<void> {
+        try {
+            const userStatsRef = doc(db, DATABASE_TABLE_NAME.STATISTICS, userId);
+            const userStatsSnap = await getDoc(userStatsRef);
+    
+            if (userStatsSnap.exists()) {
+                const userStats = userStatsSnap.data();
+    
+                const updatedGameStats = {
+                    ...userStats.gameStats,
+                    [gameKey]: newScore
+                };
+    
+                const updatedCommonStats = {
+                    ...userStats.commonStats,
+                    totalPoints: (userStats.commonStats.totalPoints || 0) + newScore
+                };
+    
+                const newAchievement = {
+                    game: gameKey,
+                    date: new Date(),
+                    type: "New Record"
+                };
+                const updatedAchievements = [...userStats.achievements, newAchievement];
+    
+                await updateDoc(userStatsRef, {
+                    gameStats: updatedGameStats,
+                    commonStats: updatedCommonStats,
+                    achievements: updatedAchievements
+                });
+    
+                console.log(`Score and stats updated successfully for userId: ${userId}, gameKey: ${gameKey}`);
+            } else {
+                console.error(`No such user statistics found for userId: ${userId}`);
+            }
+        } catch (error) {
+            console.error("Error updating user score: ", error);
+        }
     }
 }
