@@ -58,12 +58,11 @@ export const UserPreferencesView = () => {
                 description={"Provide your preferences before getting started"}
             />}
             <View style={styles.inputContainer}>
-                <CustomizedDivider text={'Username'} inputStyles={{marginBottom: -16}}/>
+                <CustomizedDivider text={'Username'} inputStyles={{marginBottom: -40}}/>
                 <CustomizedTextInput
                     value={username}
                     valueSetter={setUsername}
-                    placeholder="Username"
-                    description="Your username"
+                    placeholder="Your username"
                 />
 
                 <View>

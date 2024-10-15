@@ -47,7 +47,7 @@ export const RegisterView = () => {
             <CustomizedButton title="Create account" handleClick={signUp}></CustomizedButton>
 
             <View style={styles.noAccount}>
-                <Text style={{ color: DEFAULT_COLORS.primaryGray }}>Already have ab account?
+                <Text style={{ color: DEFAULT_COLORS.primaryGray }}>Already have an account?
                 </Text>
                 <Link style={{ marginLeft: 4, color: DEFAULT_COLORS.primaryBlue }}
                       to={{ screen: `${ApplicationRoute.LOGIN}` }}>
