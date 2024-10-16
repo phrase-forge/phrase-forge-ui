@@ -70,7 +70,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "quiz" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "quiz", learnedTasks, task)) {
                         quizTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -97,7 +97,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "translate" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "translate", learnedTasks, task)) {
                         translateTasks.push({
                             answer: gameData.answer,
                             category: gameData.category,
@@ -124,7 +124,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "gaps" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "gaps", learnedTasks, task)) {
                         gapsTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -152,7 +152,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "pictures" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "pictures", learnedTasks, task)) {
                         picturesTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -180,7 +180,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "pairs" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "pairs", learnedTasks, task)) {
                         pairsTasks.push({
                             category: gameData.category,
                             difficultyLevel: gameData.difficultyLevel,
@@ -209,7 +209,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (gameData.type === "sequence" && !learnedTasks.includes(task.id) && gameData.difficultyLevel === this.userPreferences.level) {
+                    if (this.getTaskForUser(gameData, "sequence", learnedTasks, task)) {
                         sequenceTask.push({
                             id: task.id,
                             type: gameData.type,
@@ -282,5 +282,10 @@ export class UserService {
                 console.error('Error fetching user preferences:', error);
                 throw error;
             });
+    }
+
+    private static getTaskForUser(gameData, gameType: string, learnedTasks: string[], task) {
+        return gameData.type === gameType && !learnedTasks.includes(task.id) &&
+            gameData.difficultyLevel === this.userPreferences.level && gameData.category === this.userPreferences.category;
     }
 }

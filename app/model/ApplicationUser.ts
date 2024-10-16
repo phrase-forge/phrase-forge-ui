@@ -13,6 +13,7 @@ export type UserPreferences = {
     username: string,
     language: Language,
     level: Level,
+    category: Category,
     notificationSettings: NotificationSettings,
     soundSettings: SoundSettings
 };
@@ -26,6 +27,11 @@ export enum Level {
     EASY = 'Easy',
     MEDIUM = 'Medium',
     ADVANCED = 'Advanced'
+}
+
+export enum Category {
+    GENERAL = 'General',
+    HEALTH = 'Health',
 }
 
 export type Settings = {
