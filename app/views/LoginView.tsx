@@ -11,6 +11,7 @@ import { Link } from "@react-navigation/native";
 import { CustomizedDivider } from "../component/customized/CustomizedDivider";
 import { SocialIcon } from "@rneui/themed";
 import { ApplicationRoute } from "../model/Routing";
+import {UserService} from "../services/UserService";
 
 export const LoginView = () => {
     const [email, setEmail] = useState('');
@@ -20,11 +21,14 @@ export const LoginView = () => {
     const signIn = async () => {
         setLoading(true);
 
-        await signInWithEmailAndPassword(auth, email, password)
-            .catch(error => {
-                alert('Sign in failed: ' + error.message);
-                setLoading(false);
-            });
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userId = userCredential.user.uid;
+            UserService.userPreferences = await UserService.getUserPreferences(userId);
+        } catch (error) {
+            alert('Sign in failed: ' + error.message);
+            setLoading(false);
+        }
     };
 
     return (

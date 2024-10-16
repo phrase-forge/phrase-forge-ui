@@ -41,6 +41,8 @@ export const UserPreferencesView = () => {
             }
         };
 
+        UserService.userPreferences = user.preferences;
+
         UserService.saveUserPreferences(user.user.uid, user.preferences)
             .finally(() => setLoading(false));
     };
