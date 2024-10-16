@@ -117,7 +117,7 @@ export const SequenceView = ({navigation}) => {
 
                         {hasError && (
                             <Text style={styles.meaningText}>
-                                Niestety, poprawna kolejność to:
+                                Unfortunately, the correct order is:
                             </Text>
                         )}
 
