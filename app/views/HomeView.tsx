@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { ScrollView, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../services/UserContext";
@@ -38,6 +39,8 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>;
     };
 
+    const { commonStats } = user?.stats || {};
+
     return (
         <View style={{ flex: 1, }}>
             <HomeNavbarComponent title={`Hi, ${user?.preferences?.username}`} description={"Let's start learning"}/>
@@ -54,10 +57,10 @@ export const HomeView = ({ navigation }: RouterProps) => {
                             color: DEFAULT_COLORS.primaryDark,
                             fontSize: 32,
                             fontWeight: 'bold'
-                        }}>46min </Text>
+                        }}>{commonStats.minutesToday || 0}</Text>
                         <Text style={{ color: DEFAULT_COLORS.secondaryGray, fontSize: 16 }}>/ 60min</Text>
                     </View>
-                    <ProgressBar progress={0.6} style={{ height: 8, borderRadius: 10 }}
+                    <ProgressBar progress={Math.min(1, commonStats.minutesToday / 60)} style={{ height: 8, borderRadius: 10 }}
                                  color={DEFAULT_COLORS.primaryBlue}/>
                 </CustomizedCard>
 

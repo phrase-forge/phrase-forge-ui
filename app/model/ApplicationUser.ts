@@ -13,6 +13,7 @@ export type UserPreferences = {
     username: string,
     language: Language,
     level: Level,
+    category: Category,
     notificationSettings: NotificationSettings,
     soundSettings: SoundSettings
 };
@@ -26,6 +27,11 @@ export enum Level {
     EASY = 'Easy',
     MEDIUM = 'Medium',
     ADVANCED = 'Advanced'
+}
+
+export enum Category {
+    GENERAL = 'General',
+    HEALTH = 'Health',
 }
 
 export type Settings = {
@@ -45,7 +51,7 @@ type Range<N extends number, Acc extends number[] = []> =
 
 export interface UserStats {
     achievements: UserAchievement[];
-    commonStats: Map<string, string>;
+    commonStats: CommonStats;
     gameStats: GameStatistic[];
     finishedTasksIds: string[];
 }
@@ -60,6 +66,13 @@ export interface GameStatistic {
     name: string;
     currentScore: number;
     maxScore: number;
+}
+
+export interface CommonStats {
+    totalPoints: number;
+    minutesToday: number;
+    minutesTotal: number;
+    daysInRow: number;
 }
 
 export enum UserRole {

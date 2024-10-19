@@ -52,14 +52,14 @@ export const AccountStatsView = () => {
         </View>
     }
 
-    const { commonStats, gameStats } = user.stats;
+    const { commonStats, gameStats, finishedTasksIds } = user.stats;
 
     return <View>
         <View style={styles.container}>
-            <StatCard title={'Days in row'} value={commonStats['dayInRow'] || 0}></StatCard>
-            <StatCard title={'Finished exercises'} value={commonStats['finishedItems'] || 0}></StatCard>
-            <StatCard title={'Minutes total'} value={commonStats['minutesTotal'] || 0}></StatCard>
-            <StatCard title={'Total points'} value={commonStats['totalPoints'] || 0}></StatCard>
+            <StatCard title={'Days in row'} value={commonStats.daysInRow || 0}></StatCard>
+            <StatCard title={'Finished exercises'} value={finishedTasksIds.length || 0}></StatCard>
+            <StatCard title={'Minutes total'} value={commonStats.minutesTotal || 0}></StatCard>
+            <StatCard title={'Total points'} value={commonStats.totalPoints || 0}></StatCard>
         </View>
         <CustomizedCard>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

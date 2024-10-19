@@ -29,7 +29,7 @@ export const QuizView = ({ navigation }) => {
   const [taskToRemove, setTaskToRemove] = useState(0);
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
-
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -47,7 +47,9 @@ export const QuizView = ({ navigation }) => {
     }
     setOptionColors(Array(4).fill(DEFAULT_COLORS.primaryBlue));
     setSelectedOption(null);
+
     if (quizTasks.length == 0) {
+      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
       // eslint-disable-next-line react/prop-types
       navigation.replace(ApplicationRoute.ENDGAME);
     }
@@ -87,8 +89,10 @@ export const QuizView = ({ navigation }) => {
     };
 
     fetchQuizTasks();
+    setStartTime(new Date().getTime());
   }, []);
 
+  
   if (quizTasks === null) {
     return <Text>Loading...</Text>;
   }

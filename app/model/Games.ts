@@ -3,5 +3,6 @@ export enum Games {
     TRANSLATE = 'translate',
     GAPS = 'gaps',
     PICTURES = 'pictures',
-    PAIRS = 'pairs'
+    PAIRS = 'pairs',
+    SEQUENCE = 'sequence'
 }
