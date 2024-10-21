@@ -1,17 +1,17 @@
-import {ScrollView, StyleSheet, Text, View} from "react-native";
-import React, {useContext, useState} from "react";
-import {CustomizedTextInput} from "../component/customized/CustomizedTextInput";
-import {ApplicationHeaderComponent} from "../component/ApplicationHeaderComponent";
-import {CustomizedButton} from "../component/customized/CustomizedButton";
-import {LoadingContext} from "../services/LoadingContext";
-import {Category, Language, Level, VolumeRange} from "../model/ApplicationUser";
-import {DEFAULT_COLORS} from "../styles/Colors";
-import {SegmentedButtons, Switch} from "react-native-paper";
-import {UserContext} from "../services/UserContext";
-import {CustomizedDivider} from "../component/customized/CustomizedDivider";
-import {UserService} from "../services/UserService";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useContext, useState } from "react";
+import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
+import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
+import { CustomizedButton } from "../component/customized/CustomizedButton";
+import { LoadingContext } from "../services/LoadingContext";
+import { Language, Level, VolumeRange } from "../model/ApplicationUser";
+import { DEFAULT_COLORS } from "../styles/Colors";
+import { SegmentedButtons, Switch } from "react-native-paper";
+import { UserContext } from "../services/UserContext";
+import { CustomizedDivider } from "../component/customized/CustomizedDivider";
+import { UserService } from "../services/UserService";
 import Slider from "@react-native-assets/slider";
-import {HomeNavbarComponent} from "../component/HomeNavbarComponent";
+import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
 
 export const UserPreferencesView = () => {
     const { setLoading } = useContext(LoadingContext);
@@ -20,7 +20,6 @@ export const UserPreferencesView = () => {
     const [username, setUsername] = useState(user?.preferences?.username || '');
     const [language, setLanguage] = useState(user?.preferences?.language || Language.ENGLISH);
     const [level, setLevel] = useState(user?.preferences?.level || Level.EASY);
-    const [category, setCategory] = useState(user?.preferences?.category || Category.GENERAL);
 
     const [notificationEnabled, setNotificationEnabled] = useState(user?.preferences?.notificationSettings?.enable || false);
     const [soundEnabled, setSoundEnabled] = useState(user?.preferences?.soundSettings?.enable || false);
@@ -33,7 +32,6 @@ export const UserPreferencesView = () => {
             username,
             language: language,
             level: level,
-            category: category,
             notificationSettings: {
                 enable: notificationEnabled
             },
@@ -109,27 +107,6 @@ export const UserPreferencesView = () => {
                                 {
                                     value: Level.ADVANCED,
                                     label: 'Advanced',
-                                },
-                            ]}
-                        />
-                    </View>
-                </View>
-
-                <View>
-                    <CustomizedDivider text={'Category'} inputStyles={{ marginBottom: 16 }}/>
-                    <View>
-                        <SegmentedButtons
-                            density="high"
-                            value={category}
-                            onValueChange={(value) => setCategory(value)}
-                            buttons={[
-                                {
-                                    value: Category.GENERAL,
-                                    label: 'General',
-                                },
-                                {
-                                    value: Category.HEALTH,
-                                    label: 'Health',
                                 },
                             ]}
                         />
