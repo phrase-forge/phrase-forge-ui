@@ -44,7 +44,8 @@ export class UserService {
                 daysInRow: 0
             },
             gameStats: {},
-            finishedTasksIds: []
+            finishedTasksIds: [],
+            lastLogged: new Date(),
         };
         const addUserPromise = setDoc(doc(db, DATABASE_TABLE_NAME.USERS, user.uid), userDoc);
         const addUserStatPromise = setDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, user.uid), userStatDoc);
