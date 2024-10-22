@@ -381,7 +381,7 @@ export class UserService {
 
             let minutesToday = userData?.commonStats?.minutesToday || 0;
 
-            if (new Date(userData?.lastLogged.seconds).toDateString() === startTime.toDateString()) {
+            if (new Date(userData?.lastLogged.seconds * 1000).toDateString() === startTime.toDateString()) {
                 minutesToday += minutesSpent;
             } else {
                 minutesToday = minutesSpent;

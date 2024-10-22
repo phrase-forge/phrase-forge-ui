@@ -35,6 +35,7 @@ export const TranslateView = ({ navigation }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -54,6 +55,7 @@ export const TranslateView = ({ navigation }) => {
     setCorrectAnswer("");
     setIsSubmitted(false);
     if (translateTasks.length === 0) {
+      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };
@@ -93,6 +95,7 @@ export const TranslateView = ({ navigation }) => {
     };
 
     fetchQuizTasks();
+    setStartTime(new Date().getTime());
   }, []);
 
   if (translateTasks === null) {

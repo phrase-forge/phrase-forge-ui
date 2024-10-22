@@ -26,11 +26,13 @@ export const SequenceView = ({navigation}) => {
     const [hasError, setHasError] = useState(false);
     const [score, setScore] = useState<number>(0);
     const [streak, setStreak] = useState<number>(0);
+    const [startTime, setStartTime] = useState<number | null>(null);
 
     const onNavigationChange = () => {
         setHasError(false);
         setCorrectAnswerChosenNumber(0)
         if (sequenceTasks && number == sequenceTasks.length - 1) {
+            UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
             navigation.replace(ApplicationRoute.ENDGAME);
         } else {
             setNumber(number + 1);
@@ -84,6 +86,7 @@ export const SequenceView = ({navigation}) => {
         };
 
         fetchSequenceTasks();
+        setStartTime(new Date().getTime());
     }, []);
 
     return (

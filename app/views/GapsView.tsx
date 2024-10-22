@@ -24,6 +24,7 @@ export const GapsView = ({ navigation }) => {
   const [taskToRemove, setTaskToRemove] = useState(0);
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -42,6 +43,7 @@ export const GapsView = ({ navigation }) => {
     setOptionColors(Array(4).fill(DEFAULT_COLORS.primaryBlue));
     setSelectedOption(null);
     if (gapsTasks.length == 0) {
+      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };
@@ -79,6 +81,7 @@ export const GapsView = ({ navigation }) => {
     };
 
     fetchQuizTasks();
+    setStartTime(new Date().getTime());
   }, []);
 
   if (gapsTasks === null) {

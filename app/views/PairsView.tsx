@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -39,6 +40,7 @@ export const PairsView = ({ navigation }) => {
   const [pressedIndex, setPressedIndex] = useState<number | null>(null);
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchQuizTasks = async () => {
@@ -48,6 +50,7 @@ export const PairsView = ({ navigation }) => {
     };
 
     fetchQuizTasks();
+    setStartTime(new Date().getTime());
   }, []);
 
   const shuffleOptions = (tasks: PairsTask[]) => {
@@ -115,6 +118,7 @@ export const PairsView = ({ navigation }) => {
 
     setSelectedFirstColumnOption(null);
     if (pairsTasks.length === 0) {
+      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
       navigation.replace(ApplicationRoute.ENDGAME);
     } else {
       shuffleOptions(pairsTasks);

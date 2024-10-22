@@ -27,6 +27,7 @@ export const PicturesView = ({ navigation }) => {
   const [taskToRemove, setTaskToRemove] = useState(0);
   const [score, setScore] = useState<number>(0);
   const [streak, setStreak] = useState<number>(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const onNavigationChange = () => {
     if (taskToRemove === 1) {
@@ -45,6 +46,7 @@ export const PicturesView = ({ navigation }) => {
     setOptionColors(Array(4).fill(DEFAULT_COLORS.primaryBlue));
     setSelectedOption(null);
     if (picturesTasks.length == 0) {
+      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };
@@ -82,6 +84,7 @@ export const PicturesView = ({ navigation }) => {
     };
 
     fetchQuizTasks();
+    setStartTime(new Date().getTime());
   }, []);
 
   if (picturesTasks === null) {
