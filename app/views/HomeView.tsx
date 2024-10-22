@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../services/UserContext";
 import { ApplicationRoute, RouterProps } from "../model/Routing";
@@ -9,6 +9,7 @@ import { IconButton, ProgressBar, Tooltip } from "react-native-paper";
 import { Link } from "@react-navigation/native";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
 import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
+import { useFetchUserStats } from "../hooks/useFetchUserStats";
 
 interface GameProgressProps {
     title: string;
@@ -17,7 +18,14 @@ interface GameProgressProps {
 }
 
 export const HomeView = ({ navigation }: RouterProps) => {
+    const { isLoading, userStats } = useFetchUserStats();
     const { user } = useContext(UserContext);
+
+    if (isLoading) {
+        return <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={DEFAULT_COLORS.primaryDark} />
+        </View>
+    }
 
     const GameProgress = ({ title, score, maxScore }: GameProgressProps) => {
         return <View
@@ -39,7 +47,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>;
     };
 
-    const { commonStats } = user?.stats || {};
+    const { commonStats, gameStats } = userStats || {};
 
     return (
         <View style={{ flex: 1, }}>
@@ -92,7 +100,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
                               style={{ color: DEFAULT_COLORS.primaryBlue, fontSize: 16 }}>Games</Link>
                     </View>
 
-                    {user?.stats?.gameStats.map(stat => {
+                    {gameStats.map(stat => {
                         return <GameProgress key={stat.name} title={stat.name} score={stat.currentScore}
                                              maxScore={stat.maxScore}/>;
                     })}
@@ -102,3 +110,11 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});

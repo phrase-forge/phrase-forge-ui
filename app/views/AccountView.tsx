@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ApplicationRoute, RouterProps } from "../model/Routing";
 import { ApplicationBottomBar } from "../component/navigation/ApplicationBottomBar";
 import React, { useState } from "react";
@@ -6,10 +6,18 @@ import { DEFAULT_COLORS } from "../styles/Colors";
 import { AccountActivityView } from "./AccountActivityView";
 import { AccountStatsView } from "./AccountStatsView";
 import { CustomizedAvatar } from "../component/customized/CustomizedAvatar";
+import { useFetchUserStats } from "../hooks/useFetchUserStats";
 
 
 export const AccountView = ({ navigation }: RouterProps) => {
     const [tab, setTab] = useState(ApplicationRoute.STATS);
+    const { isLoading } = useFetchUserStats();
+
+    if (isLoading) {
+        return <View style={style.loadingContainer}>
+            <ActivityIndicator size="large" color={DEFAULT_COLORS.primaryDark} />
+        </View>
+    }
 
     const currentTabView = () => {
         switch (tab) {
@@ -60,5 +68,10 @@ export const AccountView = ({ navigation }: RouterProps) => {
 };
 
 const style = StyleSheet.create({
-    selectedTab: { borderBottomColor: 'white', borderBottomWidth: 2 }
+    selectedTab: { borderBottomColor: 'white', borderBottomWidth: 2 },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
