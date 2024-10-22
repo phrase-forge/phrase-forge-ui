@@ -119,6 +119,7 @@ export const UserPreferencesView = () => {
                     <CustomizedDivider text={'Category'} inputStyles={{ marginBottom: 16 }}/>
                     <View>
                         <SegmentedButtons
+                            style={styles.segmentedButtons}
                             density="high"
                             value={category}
                             onValueChange={(value) => setCategory(value)}
@@ -128,8 +129,20 @@ export const UserPreferencesView = () => {
                                     label: 'General',
                                 },
                                 {
+                                    value: Category.BUSINESS,
+                                    label: 'Business',
+                                },
+                                {
                                     value: Category.HEALTH,
                                     label: 'Health',
+                                },
+                                {
+                                    value: Category.TRAVEL,
+                                    label: 'Travel',
+                                },
+                                {
+                                    value: Category.ALL,
+                                    label: 'All',
                                 },
                             ]}
                         />
@@ -173,6 +186,11 @@ export const UserPreferencesView = () => {
 };
 
 const styles = StyleSheet.create({
+    segmentedButtons: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
     container: {
         paddingHorizontal: 24,
         marginBottom: 100

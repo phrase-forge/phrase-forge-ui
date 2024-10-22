@@ -1,5 +1,6 @@
 import {
     ApplicationUser,
+    Category,
     GameStatistic,
     GapsTask,
     PairsTask,
@@ -402,6 +403,7 @@ export class UserService {
 
     private static getTaskForUser(gameData, gameType: string, learnedTasks: string[], task) {
         return gameData.type === gameType && !learnedTasks.includes(task.id) &&
-            gameData.difficultyLevel === this.userPreferences.level && gameData.category === this.userPreferences.category;
+            gameData.difficultyLevel === this.userPreferences.level &&
+            (gameData.category === this.userPreferences.category || this.userPreferences.category == Category.ALL);
     }
 }

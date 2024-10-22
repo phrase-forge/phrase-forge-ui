@@ -30,8 +30,11 @@ export enum Level {
 }
 
 export enum Category {
+    ALL = 'All',
+    BUSINESS = 'Business',
     GENERAL = 'General',
     HEALTH = 'Health',
+    TRAVEL = 'Travel',
 }
 
 export type Settings = {
