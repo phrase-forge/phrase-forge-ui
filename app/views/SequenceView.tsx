@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
         flexBasis: "10%",
         borderRadius: 8,
         alignItems: "center",
+        justifyContent: "center",
         marginBottom: 10,
         padding: 20,
     },

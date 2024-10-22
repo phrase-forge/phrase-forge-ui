@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: DEFAULT_COLORS.primaryBlue,
     borderRadius: 8,
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 10,
     padding: 20,
   },
