@@ -37,7 +37,12 @@ export class UserService {
         };
         const userStatDoc = {
             achievements: [],
-            commonStats: {},
+            commonStats: {
+                totalPoints: 0,
+                minutesToday: 0,
+                minutesTotal: 0,
+                daysInRow: 0
+            },
             gameStats: {},
             finishedTasksIds: []
         };
