@@ -239,15 +239,30 @@ export class UserService {
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
 
         return Promise.all([userStatsPromise, gamesPromise])
-            .then(([userStatsSnap, games]) => {
+            .then(async ([userStatsSnap, games]) => {
                 const gameStats: GameStatistic[] = [];
                 const userStats = userStatsSnap.data();
+                const finishedTasksIds = userStats?.finishedTasksIds || [];
+
+                const taskPromises = finishedTasksIds.map(taskId => getDoc(doc(db, DATABASE_TABLE_NAME.TASKS, taskId)));
+                const tasksSnapshot = await Promise.all(taskPromises);
+                const tasksByType: { [key: string]: number } = {};
+                
+                tasksSnapshot.forEach(taskSnap => {
+                    if (taskSnap.exists()) {
+                        const taskData = taskSnap.data();
+                        const taskType = taskData.type;
+                        tasksByType[taskType] = (tasksByType[taskType] || 0) + 1;
+                    }
+                });
 
                 games.forEach(gameRef => {
                     const gameData = gameRef.data();
+                    const currentScore = tasksByType[gameData.key] || 0;
+
                     gameStats.push({
                         name: gameData.name,
-                        currentScore: userStats?.gameStats[gameData.key] || 0,
+                        currentScore: currentScore,
                         maxScore: gameData.tasks
                     });
                 });
@@ -259,7 +274,6 @@ export class UserService {
                     achievements.sort((s1, s2) => s2.date - s1.date);
                 }
 
-                const finishedTasksIds = userStats?.finishedTasksIds || [];
                 return {
                     commonStats: {
                         totalPoints: userStats?.commonStats.totalPoints || 0,
