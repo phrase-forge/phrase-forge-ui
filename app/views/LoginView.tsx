@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/react-in-jsx-scope */
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useContext, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -25,6 +27,7 @@ export const LoginView = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const userId = userCredential.user.uid;
             UserService.userPreferences = await UserService.getUserPreferences(userId);
+            await UserService.updateLoginStats(userId);
         } catch (error) {
             alert('Sign in failed: ' + error.message);
             setLoading(false);

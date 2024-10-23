@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from "react-native";
+/* eslint-disable react/no-unescaped-entities */
+import { ActivityIndicator, ScrollView, Text, View, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { UserContext } from "../services/UserContext";
 import { ApplicationRoute, RouterProps } from "../model/Routing";
@@ -8,6 +9,7 @@ import { IconButton, ProgressBar, Tooltip } from "react-native-paper";
 import { Link } from "@react-navigation/native";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
 import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
+import { useFetchUserStats } from "../hooks/useFetchUserStats";
 
 interface GameProgressProps {
     title: string;
@@ -16,7 +18,14 @@ interface GameProgressProps {
 }
 
 export const HomeView = ({ navigation }: RouterProps) => {
+    const { isLoading, userStats } = useFetchUserStats();
     const { user } = useContext(UserContext);
+
+    if (isLoading) {
+        return <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={DEFAULT_COLORS.primaryDark} />
+        </View>
+    }
 
     const GameProgress = ({ title, score, maxScore }: GameProgressProps) => {
         return <View
@@ -38,6 +47,8 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>;
     };
 
+    const { commonStats, gameStats } = userStats || {};
+
     return (
         <View style={{ flex: 1, }}>
             <HomeNavbarComponent title={`Hi, ${user?.preferences?.username}`} description={"Let's start learning"}/>
@@ -54,10 +65,10 @@ export const HomeView = ({ navigation }: RouterProps) => {
                             color: DEFAULT_COLORS.primaryDark,
                             fontSize: 32,
                             fontWeight: 'bold'
-                        }}>46min </Text>
+                        }}>{commonStats.minutesToday || 0}</Text>
                         <Text style={{ color: DEFAULT_COLORS.secondaryGray, fontSize: 16 }}>/ 60min</Text>
                     </View>
-                    <ProgressBar progress={0.6} style={{ height: 8, borderRadius: 10 }}
+                    <ProgressBar progress={Math.min(1, commonStats.minutesToday / 60)} style={{ height: 8, borderRadius: 10 }}
                                  color={DEFAULT_COLORS.primaryBlue}/>
                 </CustomizedCard>
 
@@ -89,7 +100,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
                               style={{ color: DEFAULT_COLORS.primaryBlue, fontSize: 16 }}>Games</Link>
                     </View>
 
-                    {user?.stats?.gameStats.map(stat => {
+                    {gameStats.map(stat => {
                         return <GameProgress key={stat.name} title={stat.name} score={stat.currentScore}
                                              maxScore={stat.maxScore}/>;
                     })}
@@ -99,3 +110,11 @@ export const HomeView = ({ navigation }: RouterProps) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});

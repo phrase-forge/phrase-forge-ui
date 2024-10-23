@@ -5,6 +5,7 @@ import { ApplicationRoute } from "../model/Routing";
 import { ViewContainer } from "../component/ViewContainer";
 import { useNavigation } from "@react-navigation/native";
 
+// eslint-disable-next-line react/prop-types
 export const EndOfGameView = () => {
   const navigation = useNavigation();
 

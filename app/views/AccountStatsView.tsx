@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+/* eslint-disable react/prop-types */
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../styles/Colors";
-import React, { useContext } from "react";
-import { UserContext } from "../services/UserContext";
+import React from "react";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
 import { MD3Colors, ProgressBar } from "react-native-paper";
+import { useFetchUserStats } from "../hooks/useFetchUserStats";
 
 const StatCard = ({ title, value }) => {
     return <View style={styles.infoCard}>
@@ -22,15 +23,22 @@ const StatCard = ({ title, value }) => {
 
 
 export const AccountStatsView = () => {
-    const { user } = useContext(UserContext);
-    const { commonStats, gameStats } = user.stats;
+    const { isLoading, userStats } = useFetchUserStats();
+
+    if (isLoading) {
+        return <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={DEFAULT_COLORS.primaryDark} />
+        </View>
+    }
+
+    const { commonStats, gameStats, finishedTasksIds } = userStats;
 
     return <View>
         <View style={styles.container}>
-            <StatCard title={'Days in row'} value={commonStats['dayInRow'] || 0}></StatCard>
-            <StatCard title={'Finished exercises'} value={commonStats['finishedItems'] || 0}></StatCard>
-            <StatCard title={'Minutes total'} value={commonStats['minutesTotal'] || 0}></StatCard>
-            <StatCard title={'Total points'} value={commonStats['totalPoints'] || 0}></StatCard>
+            <StatCard title={'Days in row'} value={commonStats.daysInRow || 0}></StatCard>
+            <StatCard title={'Finished exercises'} value={finishedTasksIds.length || 0}></StatCard>
+            <StatCard title={'Minutes total'} value={commonStats.minutesTotal || 0}></StatCard>
+            <StatCard title={'Total points'} value={commonStats.totalPoints || 0}></StatCard>
         </View>
         <CustomizedCard>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -99,5 +107,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 3,
 
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20
     }
 });
