@@ -421,6 +421,32 @@ export class UserService {
         }
     }
 
+    static async getUsersWithPoints(): Promise<{ username: string; totalPoints: number }[]> {
+        const usersSnapshot = await getDocs(collection(db, DATABASE_TABLE_NAME.USERS));
+        const statsSnapshot = await getDocs(collection(db, DATABASE_TABLE_NAME.STATISTICS));
+      
+        const userPointsMap = new Map<string, number>();
+      
+        statsSnapshot.forEach((statDoc) => {
+            const userId = statDoc.id;
+            const totalPoints = statDoc.data()?.commonStats?.totalPoints || 0;
+            userPointsMap.set(userId, totalPoints);
+        });
+    
+        const usersWithPoints: { username: string; totalPoints: number }[] = [];
+    
+        usersSnapshot.forEach((userDoc) => {
+            const userId = userDoc.id;
+            const username = userDoc.data()?.preferences.username || "UnknownUser";
+            const totalPoints = userPointsMap.get(userId) || 0;
+            usersWithPoints.push({ username, totalPoints });
+        });
+    
+        return usersWithPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+    }
+    
+
+
     private static getTaskForUser(gameData, gameType: string, learnedTasks: string[], task) {
         return gameData.type === gameType && !learnedTasks.includes(task.id) &&
             gameData.difficultyLevel === this.userPreferences.level &&

@@ -7,6 +7,7 @@ import { AccountActivityView } from "./AccountActivityView";
 import { AccountStatsView } from "./AccountStatsView";
 import { CustomizedAvatar } from "../component/customized/CustomizedAvatar";
 import { useFetchUserStats } from "../hooks/useFetchUserStats";
+import { AccountRankingView } from "./AccountRankingView";
 
 
 export const AccountView = ({ navigation }: RouterProps) => {
@@ -25,6 +26,8 @@ export const AccountView = ({ navigation }: RouterProps) => {
                 return <AccountActivityView/>;
             case ApplicationRoute.ACHIEVEMENTS:
                 return <AccountActivityView/>;
+            case ApplicationRoute.RANKING:
+                return <AccountRankingView/>;
             default:
                 return <AccountStatsView/>;
         }
@@ -56,6 +59,11 @@ export const AccountView = ({ navigation }: RouterProps) => {
                 <View style={tab === ApplicationRoute.ACTIVITY ? style.selectedTab : {}}>
                     <Text onPress={() => setTab(ApplicationRoute.ACTIVITY)}
                           style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Activity
+                    </Text>
+                </View>
+                <View style={tab === ApplicationRoute.RANKING ? style.selectedTab : {}}>
+                    <Text onPress={() => setTab(ApplicationRoute.RANKING)}
+                          style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Ranking
                     </Text>
                 </View>
             </View>
