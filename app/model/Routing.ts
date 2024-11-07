@@ -11,6 +11,7 @@ export enum ApplicationRoute {
     // base path
     HOME = '/home',
     GAMES = '/games',
+    PHRASES = '/phrases',
     ACCOUNT = '/account',
     SETTINGS = '/settings',
     QUIZ_VIEW = '/quiz_view',
