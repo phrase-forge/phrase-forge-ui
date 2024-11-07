@@ -42,7 +42,12 @@ export const UserPreferencesView = () => {
    
     const handlePreferencesSave = async () => {
         setLoading(true);
-        if (!isAvailable) {
+        if(!username.trim()){
+            Alert.alert('Warning', 'Username cannot be empty. Please enter a valid username.');
+            setLoading(false)
+            return;  
+        }
+        else if (!isAvailable) {
             Alert.alert('Warning', 'The nickname is already taken, please choose another one.');
             setLoading(false)
             return;  
