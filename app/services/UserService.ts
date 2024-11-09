@@ -437,7 +437,7 @@ export class UserService {
     
         usersSnapshot.forEach((userDoc) => {
             const userId = userDoc.id;
-            const username = userDoc.data()?.preferences.username || "UnknownUser";
+            const username = userDoc.data()?.preferences?.username || "UnknownUser";
             const totalPoints = userPointsMap.get(userId) || 0;
             usersWithPoints.push({ username, totalPoints });
         });

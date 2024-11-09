@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, FlatList, ActivityIndicator, LogBox } from "react-native";
 import { UserService } from "../services/UserService";
 import { UserContext } from "../services/UserContext";
 import { DEFAULT_COLORS } from "../styles/Colors";
@@ -9,8 +9,10 @@ export const AccountRankingView = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { user } = useContext(UserContext);
     const loggedInUser = user?.preferences?.username;
-    
+
     useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+
         const fetchUserPoints = async () => {
             try {
                 const pointsData = await UserService.getUsersWithPoints();
