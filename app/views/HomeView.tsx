@@ -46,6 +46,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
             </View>
         </View>;
     };
+  
 
     const { commonStats, gameStats } = userStats || {};
 

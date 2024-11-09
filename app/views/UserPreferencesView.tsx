@@ -1,5 +1,5 @@
-import {ScrollView, StyleSheet, Text, View} from "react-native";
-import React, {useContext, useState} from "react";
+import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
+import React, {useContext, useEffect, useState} from "react";
 import {CustomizedTextInput} from "../component/customized/CustomizedTextInput";
 import {ApplicationHeaderComponent} from "../component/ApplicationHeaderComponent";
 import {CustomizedButton} from "../component/customized/CustomizedButton";
@@ -26,27 +26,54 @@ export const UserPreferencesView = () => {
     const [soundEnabled, setSoundEnabled] = useState(user?.preferences?.soundSettings?.enable || false);
     const [soundVolume, setSoundVolume] = useState<VolumeRange>(user?.preferences?.soundSettings?.volume || 0);
     const [scrollEnabled, setScrollEnabled] = useState(true);
+    const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
 
-    const handlePreferencesSave = () => {
+
+    useEffect(() => {
+        if (username) {
+            UserService.isNickAvaliable(username)
+                .then((available) => {
+                    setIsAvailable(available);
+                })
+        } else {
+            setIsAvailable(null);
+        }
+    }, [username]);
+   
+    const handlePreferencesSave = async () => {
         setLoading(true);
-        user.preferences = {
-            username,
-            language: language,
-            level: level,
-            category: category,
-            notificationSettings: {
-                enable: notificationEnabled
-            },
-            soundSettings: {
-                enable: soundEnabled,
-                volume: Math.floor(soundVolume) as VolumeRange
-            }
-        };
-
-        UserService.userPreferences = user.preferences;
-
-        UserService.saveUserPreferences(user.user.uid, user.preferences)
-            .finally(() => setLoading(false));
+        if(!username.trim()){
+            Alert.alert('Warning', 'Username cannot be empty. Please enter a valid username.');
+            setLoading(false)
+            return;  
+        }
+        else if (!isAvailable) {
+            Alert.alert('Warning', 'The nickname is already taken, please choose another one.');
+            setLoading(false)
+            return;  
+        }
+        else{
+            user.preferences = {
+                username,
+                language: language,
+                level: level,
+                category: category,
+                notificationSettings: {
+                    enable: notificationEnabled
+                },
+                soundSettings: {
+                    enable: soundEnabled,
+                    volume: Math.floor(soundVolume) as VolumeRange
+                }
+            };
+        
+            UserService.userPreferences = user.preferences;
+    
+            UserService.saveUserPreferences(user.user.uid, user.preferences)
+                .finally(() => setLoading(false));
+        }
+        
+        
     };
 
     return <View>
@@ -180,7 +207,7 @@ export const UserPreferencesView = () => {
                 </View>
             </View>
 
-            <CustomizedButton title="Save" handleClick={handlePreferencesSave}></CustomizedButton>
+            <CustomizedButton title="Save"  handleClick={handlePreferencesSave}></CustomizedButton>
         </ScrollView>
     </View>;
 };
