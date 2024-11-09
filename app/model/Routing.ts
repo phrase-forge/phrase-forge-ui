@@ -36,7 +36,8 @@ export enum ApplicationRoute {
     // account
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,
     ACHIEVEMENTS = `${ApplicationRoute.ACCOUNT}/achievements`,
-    ACTIVITY = `${ApplicationRoute.ACCOUNT}/activity`
+    ACTIVITY = `${ApplicationRoute.ACCOUNT}/activity`,
+    RANKING = `${ApplicationRoute.ACCOUNT}/ranking`
 }
 
 export interface RouterProps {

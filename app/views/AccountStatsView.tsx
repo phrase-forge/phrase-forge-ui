@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../styles/Colors";
 import React from "react";
 import { CustomizedCard } from "../component/customized/CustomizedCard";
@@ -81,6 +81,8 @@ export const AccountStatsView = () => {
     </View>;
 };
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
     container: {
         padding: 32,
@@ -98,15 +100,17 @@ const styles = StyleSheet.create({
     infoCard: {
         backgroundColor: 'white',
         borderRadius: 100,
-        width: 150,
-        height: 150,
+        width: width < 350 ? 120 : 160,
+        height: width < 350 ? 120 : 160,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#171717',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        elevation: 5,
+        padding: 10,
+        marginBottom: 16
     },
     loadingContainer: {
         flex: 1,
