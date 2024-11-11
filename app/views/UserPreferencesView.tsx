@@ -12,8 +12,9 @@ import {CustomizedDivider} from "../component/customized/CustomizedDivider";
 import {UserService} from "../services/UserService";
 import Slider from "@react-native-assets/slider";
 import {HomeNavbarComponent} from "../component/HomeNavbarComponent";
+import {ApplicationRoute, RouterProps} from "../model/Routing";
 
-export const UserPreferencesView = () => {
+export const UserPreferencesView = ({navigation}: RouterProps) => {
     const { setLoading } = useContext(LoadingContext);
     const { user } = useContext(UserContext);
 
@@ -28,10 +29,9 @@ export const UserPreferencesView = () => {
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
 
-
     useEffect(() => {
         if (username) {
-            UserService.isNickAvaliable(username)
+            UserService.isNickAvailable(username, user.user.uid)
                 .then((available) => {
                     setIsAvailable(available);
                 })
@@ -41,6 +41,7 @@ export const UserPreferencesView = () => {
     }, [username]);
    
     const handlePreferencesSave = async () => {
+        const afterSigningUp = UserService.userPreferences === undefined;
         setLoading(true);
         if(!username.trim()){
             Alert.alert('Warning', 'Username cannot be empty. Please enter a valid username.');
@@ -70,20 +71,24 @@ export const UserPreferencesView = () => {
             UserService.userPreferences = user.preferences;
     
             UserService.saveUserPreferences(user.user.uid, user.preferences)
-                .finally(() => setLoading(false));
+                .finally(() => {
+                    setLoading(false)
+                });
+
+            if (!afterSigningUp) {
+                navigation.goBack()
+            }
         }
-        
-        
     };
 
-    return <View>
+    return <View style={styles.viewContainer}>
         {user.preferences
             && <HomeNavbarComponent
                 title='Preferences'
                 description='Change your preferences'
             />
         }
-        <ScrollView scrollEnabled={scrollEnabled} style={styles.container}>
+        <ScrollView scrollEnabled={scrollEnabled} style={styles.scrollContainer}>
             {!user.preferences && <ApplicationHeaderComponent
                 title="Preferences"
                 description={"Provide your preferences before getting started"}
@@ -213,18 +218,20 @@ export const UserPreferencesView = () => {
 };
 
 const styles = StyleSheet.create({
+    viewContainer: {
+        flex: 1,
+    },
     segmentedButtons: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
     },
-    container: {
-        paddingHorizontal: 24,
-        marginBottom: 100
+    scrollContainer: {
+        paddingHorizontal: 32,
     },
     inputContainer: {
         gap: 32,
-        marginTop: 64
+        marginTop: 24
     },
     inputLabel: {
         color: DEFAULT_COLORS.primaryGray,

@@ -426,12 +426,12 @@ export class UserService {
             gameData.difficultyLevel === this.userPreferences.level &&
             (gameData.category === this.userPreferences.category || this.userPreferences.category == Category.ALL);
     }
-    static async isNickAvaliable(nick: string): Promise<boolean> {
+    static async isNickAvailable(nick: string, userUID: string): Promise<boolean> {
         const userSnap = await getDocs(collection(db, DATABASE_TABLE_NAME.USERS));
         for (const user of userSnap.docs) {
             const userData = user.data(); 
             const otherNick = userData.preferences?.username;
-            if (otherNick === nick) {
+            if ((otherNick === nick) && (userUID != user.id)) {
                 return false; 
             }
         }
