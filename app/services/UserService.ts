@@ -17,6 +17,7 @@ import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
 import { User } from "firebase/auth";
 import { Games } from "../model/Games";
+import { CustomTaskService } from "./CustomTaskService";
 
 
 export class UserService {
@@ -222,20 +223,37 @@ export class UserService {
         return updateDoc(updateRef, {preferences});
     }
 
+    private static countCustomGames(customGamesData) {
+        const customGamesMap = new Map();
+        customGamesData.forEach(customGameSnapshot => {
+            const data = customGameSnapshot.data();
+            if (customGamesMap.has(data.type)) {
+                const currentCount = customGamesMap.get(data.type);
+                customGamesMap.set(data.type, currentCount + 1);
+            } else {
+                customGamesMap.set(data.type, 1);
+            }
+        })
+        return customGamesMap;
+    }
+
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
+        const customGamesPromise = CustomTaskService.getTasks(userId);
 
-        return Promise.all([userStatsPromise, gamesPromise])
-            .then(async ([userStatsSnap, games]) => {
+        return Promise.all([userStatsPromise, gamesPromise, customGamesPromise])
+            .then(async ([userStatsSnap, games, customUserGames]) => {
+                const customGamesCountMap = this.countCustomGames(customUserGames);
                 const gameStats: GameStatistic[] = [];
                 const userStats = userStatsSnap.data();
+
                 const finishedTasksIds = userStats?.finishedTasksIds || [];
 
                 const taskPromises = finishedTasksIds.map(taskId => getDoc(doc(db, DATABASE_TABLE_NAME.TASKS, taskId)));
                 const tasksSnapshot = await Promise.all(taskPromises);
                 const tasksByType: { [key: string]: number } = {};
-                
+
                 tasksSnapshot.forEach(taskSnap => {
                     if (taskSnap.exists()) {
                         const taskData = taskSnap.data();
@@ -247,11 +265,12 @@ export class UserService {
                 games.forEach(gameRef => {
                     const gameData = gameRef.data();
                     const currentScore = tasksByType[gameData.key] || 0;
+                    const customGamesCount = customGamesCountMap.get(gameData.name.toLowerCase()) || 0
 
                     gameStats.push({
                         name: gameData.name,
                         currentScore: currentScore,
-                        maxScore: gameData.tasks
+                        maxScore: gameData.tasks + customGamesCount
                     });
                 });
                 gameStats.sort((s1, s2) => s2.currentScore - s1.currentScore);
