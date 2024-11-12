@@ -14,7 +14,7 @@ export const LoggedUserLayout = () => {
         <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none' }}>
             <Stack.Screen name={ApplicationRoute.HOME} component={HomeView}/>
             <Stack.Screen name={ApplicationRoute.GAMES} component={GamesLayout}/>
-            <Stack.Screen name={ApplicationRoute.PHRASES} component={PhrasesView}/>
+            <Stack.Screen name={ApplicationRoute.DICTIONARY} component={PhrasesView}/>
             <Stack.Screen name={ApplicationRoute.SETTINGS} component={SettingsView}/>
             <Stack.Screen name={ApplicationRoute.ACCOUNT} component={AccountView}/>
         </Stack.Navigator>

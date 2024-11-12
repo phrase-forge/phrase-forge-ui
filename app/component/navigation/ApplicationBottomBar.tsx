@@ -25,9 +25,9 @@ const MENU_ACTIONS: BarActionProps[] = [
         route: ApplicationRoute.GAMES
     },
     {
-        label: 'Phrases',
+        label: 'Dictionary',
         icon: 'book-open',
-        route: ApplicationRoute.PHRASES
+        route: ApplicationRoute.DICTIONARY
     },
     {
         label: 'Settings',
