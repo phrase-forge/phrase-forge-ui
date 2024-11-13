@@ -69,7 +69,7 @@ export const PhrasesView = ({ navigation }: RouterProps) => {
                         ? <View style={{ height: 400, justifyContent: 'center', alignItems: 'center' }}>
                             <ActivityIndicator size={80} color={DEFAULT_COLORS.primaryBlue}/>
                         </View>
-                        : <View style={{justifyContent: 'space-between', height: 500}}>
+                        : <View style={{justifyContent: 'space-between'}}>
                             <View>
                                 <PhrasesTableComponent items={userPhrases}/>
                             </View>
