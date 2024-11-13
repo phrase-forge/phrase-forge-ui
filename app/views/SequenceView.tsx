@@ -12,6 +12,7 @@ import {ApplicationRoute} from "../model/Routing";
 import {shuffleArray} from "../utils/shuffleArray";
 import { GameScoreHelper } from "../helpers/GameScoreHelper";
 import { Games } from "../model/Games";
+import EndOfGameView from "./EndOfGameView";
 
 export const SequenceView = ({navigation}) => {
 
@@ -23,21 +24,24 @@ export const SequenceView = ({navigation}) => {
     const [canClick, setCanClick] = useState(true);
     const [buttonColors, setButtonColors] = useState(null);
     const [disabledButtons, setDisabledButtons] = useState(null);
+    const [isDisabledNextQuestionButton, setIsDisabledNextQuestionButton] = useState(true);
     const [hasError, setHasError] = useState(false);
+    const [isEndOfGame, setIsEndOfGame] = useState(false);
     const [score, setScore] = useState<number>(0);
     const [streak, setStreak] = useState<number>(0);
     const [startTime, setStartTime] = useState<number | null>(null);
 
     const onNavigationChange = () => {
         setHasError(false);
+        setIsDisabledNextQuestionButton(true)
         setCorrectAnswerChosenNumber(0)
         if (sequenceTasks && number == sequenceTasks.length - 1) {
             UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
             navigation.replace(ApplicationRoute.ENDGAME);
         } else {
-            setNumber(number + 1);
             setButtonColors(Array(sequenceTasks[number + 1].words.length).fill(DEFAULT_COLORS.primaryBlue));
             setDisabledButtons(Array(sequenceTasks[number + 1].words.length).fill(false));
+            setNumber(number + 1);
             setCanClick(true);
         }
     };
@@ -60,6 +64,9 @@ export const SequenceView = ({navigation}) => {
                 isCorrectAnswer = true;
                 setStreak(streak + 1);
             } else {
+                setSequenceTasks([...sequenceTasks, sequenceTasks[number]]);
+                setSequenceTasksCorrectOrder([...sequenceTasksCorrectOrder, sequenceTasksCorrectOrder[number]]);
+                setIsDisabledNextQuestionButton(false)
                 newColors[index] = "red";
                 setCanClick(false);
                 setHasError(true);
@@ -68,6 +75,11 @@ export const SequenceView = ({navigation}) => {
             setButtonColors(newColors);
             setDisabledButtons(newDisabledButtons);
             setCorrectAnswerChosenNumber(correctAnswerChosenNumber + 1);
+
+            if (correctAnswerChosenNumber + 1 == sequenceTasksCorrectOrder[number].words.length) {
+                UserService.addTaskToUserStats(user.user.uid, sequenceTasks[number].id);
+                setIsDisabledNextQuestionButton(false)
+            }
 
             const newScore = GameScoreHelper.calculatePointsForAnswer(isCorrectAnswer, score, streak + 1);
             setScore(newScore);
@@ -78,6 +90,12 @@ export const SequenceView = ({navigation}) => {
     useEffect(() => {
         const fetchSequenceTasks = async () => {
             const tasks = await UserService.getUserSequenceTask(user.user.uid);
+
+            if (tasks.length === 0) {
+                setIsEndOfGame(true);
+                return;
+            }
+
             setSequenceTasksCorrectOrder(JSON.parse(JSON.stringify(tasks)));
             shuffleAnswersInQuestions(tasks)
             setButtonColors(Array(tasks[0].words.length).fill(DEFAULT_COLORS.primaryBlue));
@@ -89,6 +107,18 @@ export const SequenceView = ({navigation}) => {
         setStartTime(new Date().getTime());
     }, []);
 
+    if (isEndOfGame) {
+        return <EndOfGameView />;
+    }
+
+    if (sequenceTasks === null) {
+        return <Text>Loading...</Text>;
+    }
+
+    if (sequenceTasks.length == 0) {
+        return <EndOfGameView />;
+    }
+
     return (
         <ViewContainer>
             <View style={styles.quizContainer}>
@@ -99,30 +129,24 @@ export const SequenceView = ({navigation}) => {
 
                 <ScrollView style={styles.scrollView}>
                     <View style={styles.quiz}>
-                        {sequenceTasks && sequenceTasks.length > 0 ? (
-                            sequenceTasks[number] && sequenceTasks[number].words.length > 0 ? (
-                                <>
-                                    <View style={styles.quizQuestion}>
-                                        <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 20 }}>
-                                            {sequenceTasks[number].meaning}
-                                        </Text>
-                                    </View>
+                        {sequenceTasks && sequenceTasks.length > 0 && sequenceTasks[number] && sequenceTasks[number].words.length > 0 && (
+                            <>
+                                <View style={styles.quizQuestion}>
+                                    <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 20 }}>
+                                        {sequenceTasks[number].meaning}
+                                    </Text>
+                                </View>
 
-                                    {sequenceTasks[number].words.map((word, index) => (
-                                        <TouchableOpacity
-                                            key={index}
-                                            style={[styles.quizOption, {backgroundColor: buttonColors[index]}]}
-                                            onPress={() => !disabledButtons[index] && handleOptionPress(index)}
-                                        >
-                                            <Text style={styles.quizOptionText}>{word}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </>
-                            ) : (
-                                <Text>No more tasks available</Text>
-                            )
-                        ) : (
-                            <Text>Loading tasks...</Text>
+                                {sequenceTasks[number].words.map((word, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={[styles.quizOption, { backgroundColor: buttonColors[index] }]}
+                                        onPress={() => !disabledButtons[index] && handleOptionPress(index)}
+                                    >
+                                        <Text style={styles.quizOptionText}>{word}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </>
                         )}
 
                         {hasError && (
@@ -137,7 +161,9 @@ export const SequenceView = ({navigation}) => {
                             </Text>
                         )}
 
-                        <TouchableOpacity style={styles.navigationButton} onPress={() => onNavigationChange()}>
+                        <TouchableOpacity style={styles.navigationButton}
+                                          disabled={isDisabledNextQuestionButton}
+                                          onPress={() => onNavigationChange()}>
                             <Text style={styles.navigationButtonText}>Next question</Text>
                         </TouchableOpacity>
                     </View>
