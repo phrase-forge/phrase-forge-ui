@@ -13,29 +13,33 @@ interface BarActionProps {
     route: ApplicationRoute;
 }
 
-const HOME_ACTION: BarActionProps = {
-    label: 'Home',
-    icon: 'home',
-    route: ApplicationRoute.HOME
-};
-
-const GAMES_ACTION: BarActionProps = {
-    label: 'Games',
-    icon: 'gamepad-variant-outline',
-    route: ApplicationRoute.GAMES
-};
-
-const SETTINGS_ACTION: BarActionProps = {
-    label: 'Settings',
-    icon: 'cog-outline',
-    route: ApplicationRoute.SETTINGS
-};
-
-const ACCOUNT_ACTION: BarActionProps = {
-    label: 'Account',
-    icon: 'account',
-    route: ApplicationRoute.ACCOUNT
-};
+const MENU_ACTIONS: BarActionProps[] = [
+    {
+        label: 'Home',
+        icon: 'home',
+        route: ApplicationRoute.HOME
+    },
+    {
+        label: 'Games',
+        icon: 'gamepad-variant-outline',
+        route: ApplicationRoute.GAMES
+    },
+    {
+        label: 'Dictionary',
+        icon: 'book-open',
+        route: ApplicationRoute.DICTIONARY
+    },
+    {
+        label: 'Settings',
+        icon: 'cog-outline',
+        route: ApplicationRoute.SETTINGS
+    },
+    {
+        label: 'Account',
+        icon: 'account',
+        route: ApplicationRoute.ACCOUNT
+    },
+];
 
 const ApplicationBarAction = (props) => {
     const currentRoute = useRoute();
@@ -50,22 +54,22 @@ const ApplicationBarAction = (props) => {
 
     const getColor = () => {
         return isRouteMatching() ?
-            DEFAULT_COLORS.primaryBlue:
-            DEFAULT_COLORS.primaryDark
-    }
+            DEFAULT_COLORS.primaryBlue :
+            DEFAULT_COLORS.primaryDark;
+    };
 
     const isRouteMatching = (): boolean => {
         const splitRoute = currentRoute.name.split('/') as string[];
         return splitRoute.includes(route.slice(1));
-    }
+    };
 
     const gamesNestedParameters = {
         screen: ApplicationRoute.GAMES_VIEW
-    }
+    };
 
     const getNestedParams = () => {
-        return route === ApplicationRoute.GAMES ? gamesNestedParameters: {};
-    }
+        return route === ApplicationRoute.GAMES ? gamesNestedParameters : {};
+    };
 
     return (
         <View style={{
@@ -73,14 +77,15 @@ const ApplicationBarAction = (props) => {
             borderColor: 'white',
             justifyContent: 'center',
             alignItems: 'center',
-            ...getStyles() }}>
-            <Appbar.Action iconColor={getColor()}  icon={icon} onPress={() => {
+            ...getStyles()
+        }}>
+            <Appbar.Action iconColor={getColor()} icon={icon} onPress={() => {
                 navigation.navigate(ApplicationRoute.LOGGED_LAYOUT, {
                     screen: route,
                     params: getNestedParams()
                 });
             }}/>
-            <Text style={{color: getColor()}}>{label}</Text>
+            <Text style={{ color: getColor() }}>{label}</Text>
         </View>
     );
 };
@@ -99,10 +104,11 @@ export const ApplicationBottomBar = (props) => {
             ]}
             safeAreaInsets={{ bottom }}
         >
-            <ApplicationBarAction propsObject={{ ...HOME_ACTION, navigation }}/>
-            <ApplicationBarAction propsObject={{ ...GAMES_ACTION, navigation }}/>
-            <ApplicationBarAction propsObject={{ ...SETTINGS_ACTION, navigation }}/>
-            <ApplicationBarAction propsObject={{ ...ACCOUNT_ACTION, navigation }}/>
+            {
+                MENU_ACTIONS.map(menuAction => <ApplicationBarAction
+                    key={menuAction.label}
+                    propsObject={{ ...menuAction, navigation }}/>)
+            }
         </Appbar>
     );
 };
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 45,
+        gap: 24,
         overflow: 'hidden',
     },
 });

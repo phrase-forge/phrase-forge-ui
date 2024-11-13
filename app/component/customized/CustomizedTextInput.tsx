@@ -13,23 +13,31 @@ interface CustomizedTextInputProps {
 }
 
 const styles = StyleSheet.create({
-   inputLabel: {
-       color: DEFAULT_COLORS.primaryGray,
-       marginBottom: 8
-   }
+    inputLabel: {
+        color: DEFAULT_COLORS.primaryGray,
+        marginBottom: 8
+    }
 });
 
-export const CustomizedTextInput = ({ value, valueSetter, description, placeholder, passwordInput, helperText, inputValidator }: CustomizedTextInputProps) => {
+export const CustomizedTextInput = ({
+                                        value,
+                                        valueSetter,
+                                        description,
+                                        placeholder,
+                                        passwordInput,
+                                        helperText,
+                                        inputValidator
+                                    }: CustomizedTextInputProps) => {
     return (<View>
         <Text style={styles.inputLabel}>{description}</Text>
         <TextInput
-            outlineStyle={{borderRadius: 16}}
+            outlineStyle={{ borderRadius: 16 }}
             textColor={DEFAULT_COLORS.primaryDark}
             outlineColor={DEFAULT_COLORS.secondaryGray}
-            theme={{ colors: { onSurfaceVariant: DEFAULT_COLORS.primaryGray} }}
+            theme={{ colors: { onSurfaceVariant: DEFAULT_COLORS.primaryGray } }}
             value={value}
             placeholder={placeholder || ''}
-            mode='outlined'
+            mode="outlined"
             onChangeText={(newValue) => valueSetter(newValue)}
             secureTextEntry={passwordInput}
         />
@@ -39,5 +47,5 @@ export const CustomizedTextInput = ({ value, valueSetter, description, placehold
             </HelperText>
             : <></>
         }
-    </View>)
-}
+    </View>);
+};

@@ -57,9 +57,6 @@ export const HomeView = ({ navigation }: RouterProps) => {
                 <CustomizedCard>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={{ color: DEFAULT_COLORS.primaryGray, fontSize: 16 }}>Time spent today</Text>
-                        {/* todo activity chart */}
-                        <Link to={{ screen: `${ApplicationRoute.GAMES}` }}
-                              style={{ color: DEFAULT_COLORS.primaryBlue, fontSize: 16 }}>Activity</Link>
                     </View>
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{
