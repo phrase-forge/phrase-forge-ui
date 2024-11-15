@@ -1,17 +1,16 @@
-import {Alert, ScrollView, StyleSheet, Text, View} from "react-native";
-import React, {useContext, useEffect, useState} from "react";
-import {CustomizedTextInput} from "../component/customized/CustomizedTextInput";
-import {ApplicationHeaderComponent} from "../component/ApplicationHeaderComponent";
-import {CustomizedButton} from "../component/customized/CustomizedButton";
-import {LoadingContext} from "../services/LoadingContext";
-import {Category, Language, Level, VolumeRange} from "../model/ApplicationUser";
-import {DEFAULT_COLORS} from "../styles/Colors";
-import {SegmentedButtons, Switch} from "react-native-paper";
-import {UserContext} from "../services/UserContext";
-import {CustomizedDivider} from "../component/customized/CustomizedDivider";
-import {UserService} from "../services/UserService";
-import Slider from "@react-native-assets/slider";
-import {HomeNavbarComponent} from "../component/HomeNavbarComponent";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
+import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
+import { CustomizedButton } from "../component/customized/CustomizedButton";
+import { LoadingContext } from "../services/LoadingContext";
+import { Category, Language, Level } from "../model/ApplicationUser";
+import { DEFAULT_COLORS } from "../styles/Colors";
+import { SegmentedButtons } from "react-native-paper";
+import { UserContext } from "../services/UserContext";
+import { CustomizedDivider } from "../component/customized/CustomizedDivider";
+import { UserService } from "../services/UserService";
+import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
 
 export const UserPreferencesView = () => {
     const { setLoading } = useContext(LoadingContext);
@@ -22,10 +21,6 @@ export const UserPreferencesView = () => {
     const [level, setLevel] = useState(user?.preferences?.level || Level.EASY);
     const [category, setCategory] = useState(user?.preferences?.category || Category.GENERAL);
 
-    const [notificationEnabled, setNotificationEnabled] = useState(user?.preferences?.notificationSettings?.enable || false);
-    const [soundEnabled, setSoundEnabled] = useState(user?.preferences?.soundSettings?.enable || false);
-    const [soundVolume, setSoundVolume] = useState<VolumeRange>(user?.preferences?.soundSettings?.volume || 0);
-    const [scrollEnabled, setScrollEnabled] = useState(true);
     const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
 
 
@@ -34,62 +29,53 @@ export const UserPreferencesView = () => {
             UserService.isNickAvaliable(username)
                 .then((available) => {
                     setIsAvailable(available);
-                })
+                });
         } else {
             setIsAvailable(null);
         }
     }, [username]);
-   
+
     const handlePreferencesSave = async () => {
         setLoading(true);
-        if(!username.trim()){
+        if (!username.trim()) {
             Alert.alert('Warning', 'Username cannot be empty. Please enter a valid username.');
-            setLoading(false)
-            return;  
-        }
-        else if (!isAvailable) {
+            setLoading(false);
+            return;
+        } else if (!isAvailable) {
             Alert.alert('Warning', 'The nickname is already taken, please choose another one.');
-            setLoading(false)
-            return;  
-        }
-        else{
+            setLoading(false);
+            return;
+        } else {
             user.preferences = {
                 username,
                 language: language,
                 level: level,
                 category: category,
-                notificationSettings: {
-                    enable: notificationEnabled
-                },
-                soundSettings: {
-                    enable: soundEnabled,
-                    volume: Math.floor(soundVolume) as VolumeRange
-                }
             };
-        
+
             UserService.userPreferences = user.preferences;
-    
+
             UserService.saveUserPreferences(user.user.uid, user.preferences)
                 .finally(() => setLoading(false));
         }
-        
-        
+
+
     };
 
     return <View>
         {user.preferences
             && <HomeNavbarComponent
-                title='Preferences'
-                description='Change your preferences'
+                title="Preferences"
+                description="Change your preferences"
             />
         }
-        <ScrollView scrollEnabled={scrollEnabled} style={styles.container}>
+        <ScrollView scrollEnabled={true} style={styles.container}>
             {!user.preferences && <ApplicationHeaderComponent
                 title="Preferences"
                 description={"Provide your preferences before getting started"}
             />}
             <View style={styles.inputContainer}>
-                <CustomizedDivider text={'Username'} inputStyles={{marginBottom: -40}}/>
+                <CustomizedDivider text={'Username'} inputStyles={{ marginBottom: -40 }}/>
                 <CustomizedTextInput
                     value={username}
                     valueSetter={setUsername}
@@ -175,39 +161,9 @@ export const UserPreferencesView = () => {
                         />
                     </View>
                 </View>
-
-                <View>
-                    <CustomizedDivider text={'Notifications'} inputStyles={{ marginBottom: 16 }}/>
-                    <View style={styles.settingsBox}>
-                        <Text style={styles.inputLabel}>Enable</Text>
-                        <Switch value={notificationEnabled}
-                                onValueChange={() => setNotificationEnabled(!notificationEnabled)}/>
-                    </View>
-                </View>
-                <View>
-                    <CustomizedDivider text={'Sound'} inputStyles={{ marginBottom: 16 }}/>
-                    <View style={styles.settingsBox}>
-                        <Text style={styles.inputLabel}>Enable</Text>
-                        <Switch value={soundEnabled} onValueChange={() => setSoundEnabled(!soundEnabled)}/>
-                    </View>
-                    <Slider style={{marginTop: 24}}
-                            trackHeight={10}
-                            enabled={soundEnabled}
-                            thumbSize={25}
-                            value={soundVolume}
-                            onValueChange={(value: VolumeRange) => setSoundVolume(value)}
-                            minimumValue={0}
-                            maximumValue={100}
-                            minimumTrackTintColor={soundEnabled ? DEFAULT_COLORS.primaryBlue: DEFAULT_COLORS.primaryGray}
-                            maximumTrackTintColor={DEFAULT_COLORS.primaryGray}
-                            thumbTintColor={soundEnabled ? DEFAULT_COLORS.primaryBlue: DEFAULT_COLORS.primaryGray}
-                            onSlidingStart={() => setScrollEnabled(false)}
-                            onSlidingComplete={() => setScrollEnabled(true)}
-                    />
-                </View>
             </View>
 
-            <CustomizedButton title="Save"  handleClick={handlePreferencesSave}></CustomizedButton>
+            <CustomizedButton title="Save" handleClick={handlePreferencesSave}></CustomizedButton>
         </ScrollView>
     </View>;
 };
