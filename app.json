@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "phrase-forge-ui",
+    "newArchEnabled": true,
     "slug": "phrase-forge-ui",
     "version": "1.0.0",
     "orientation": "portrait",
