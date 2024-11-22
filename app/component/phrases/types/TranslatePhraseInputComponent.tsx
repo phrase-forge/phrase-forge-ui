@@ -10,7 +10,7 @@ export const TranslatePhraseInputComponent = ({ input, setInput, setValid }: Cre
 
         if (translateInput.phrase && translateInput.translatedPhrase) {
             setValid(true);
-            setInput({ ...input, answer: translateInput.translatedPhrase, phraseology: translateInput.phrase });
+            setInput({ ...input, answer: translateInput.phrase, phraseology: translateInput.translatedPhrase });
         } else {
             setValid(false);
         }

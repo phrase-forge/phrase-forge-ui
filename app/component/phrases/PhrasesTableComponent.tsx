@@ -12,7 +12,7 @@ export const PhrasesTableComponent = ({ items }) => {
     const from = page * itemsPerPage;
     const to = Math.min((page + 1) * itemsPerPage, items.length);
 
-    return <ScrollView style={styles.container}>
+    return <ScrollView style={{ height: '75%'}}>
         {
             items.length === 0
                 ? <View>
@@ -20,6 +20,18 @@ export const PhrasesTableComponent = ({ items }) => {
                 </View>
                 : <ScrollView horizontal={true}>
                     <DataTable style={{ width: 800 }}>
+                        <DataTable.Pagination
+                            style={{ marginVertical: 20, justifyContent: 'flex-start' }}
+                            page={page}
+                            numberOfPages={Math.ceil(items.length / itemsPerPage)}
+                            onPageChange={(page) => setPage(page)}
+                            label={`${from + 1}-${to} of ${items.length}`}
+                            numberOfItemsPerPageList={numberOfItemsPerPageList}
+                            numberOfItemsPerPage={itemsPerPage}
+                            onItemsPerPageChange={onItemsPerPageChange}
+                            showFastPaginationControls
+                            selectPageDropdownLabel={'Rows per page'}
+                        />
                         <DataTable.Header>
                             <DataTable.Title style={{ width: 250 }}>Phraseology</DataTable.Title>
                             <DataTable.Title>Type</DataTable.Title>
@@ -36,25 +48,8 @@ export const PhrasesTableComponent = ({ items }) => {
                             </DataTable.Row>
                         ))}
 
-                        <DataTable.Pagination
-                            style={{ marginVertical: 20, justifyContent: 'flex-start' }}
-                            page={page}
-                            numberOfPages={Math.ceil(items.length / itemsPerPage)}
-                            onPageChange={(page) => setPage(page)}
-                            label={`${from + 1}-${to} of ${items.length}`}
-                            numberOfItemsPerPageList={numberOfItemsPerPageList}
-                            numberOfItemsPerPage={itemsPerPage}
-                            onItemsPerPageChange={onItemsPerPageChange}
-                            showFastPaginationControls
-                            selectPageDropdownLabel={'Rows per page'}
-                        />
+
                     </DataTable>
                 </ScrollView>}
     </ScrollView>;
-};
-
-const styles = {
-    container: {
-        maxHeight: 400,
-    }
 };
