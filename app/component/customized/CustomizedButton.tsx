@@ -6,6 +6,7 @@ import { LoadingContext } from "../../services/LoadingContext";
 interface CustomizedContainedButtonProps {
     title: string;
     handleClick: () => void;
+    disabled?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -16,17 +17,18 @@ const styles = StyleSheet.create({
    }
 });
 
-export const CustomizedButton = ({ title, handleClick }: CustomizedContainedButtonProps) => {
+export const CustomizedButton = ({ title, handleClick, disabled }: CustomizedContainedButtonProps) => {
     const { loading } = useContext(LoadingContext);
 
     return (
         <Button
             loading={loading}
-            disabled={loading}
+            disabled={disabled || loading}
             style={styles.button}
             textColor="#FFF"
             mode="contained"
-            onPress={handleClick}>{title}
+            onPress={handleClick}>
+            {title}
         </Button>
     );
 };

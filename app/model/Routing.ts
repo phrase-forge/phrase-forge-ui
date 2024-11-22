@@ -40,7 +40,7 @@ export enum ApplicationRoute {
 
     // settings
     SETTINGS_VIEW = `${ApplicationRoute.SETTINGS}/settings_view`,
-    PREFERENCES_VIEW = `${ApplicationRoute.PREFERENCES}/preferences_view`,
+    CHANGE_PASSWORD_VIEW = `${ApplicationRoute.PREFERENCES}/change_password_view`,
 }
 
 export interface RouterProps {
