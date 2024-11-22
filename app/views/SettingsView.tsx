@@ -17,11 +17,16 @@ export const SettingsView = ({navigation}: RouterProps) => {
     return (
         <ViewContainer>
             <View style={styles.container}>
-                <HomeNavbarComponent title="Settings" description="You can Change your preferences or log out here." />
+                <HomeNavbarComponent title="Settings"
+                                     description="You can change your preferences, password or log out here."/>
                 <View style={styles.settingsContainer}>
                     <TouchableOpacity style={styles.button}
                                       onPress={() => onNavigationChange(ApplicationRoute.PREFERENCES)}>
                         <Text style={styles.buttonText}>Preferences</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}
+                                      onPress={() => onNavigationChange(ApplicationRoute.CHANGE_PASSWORD_VIEW)}>
+                        <Text style={styles.buttonText}>Change password</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}

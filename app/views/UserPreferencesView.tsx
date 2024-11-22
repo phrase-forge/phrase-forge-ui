@@ -12,7 +12,7 @@ import {CustomizedDivider} from "../component/customized/CustomizedDivider";
 import {UserService} from "../services/UserService";
 import Slider from "@react-native-assets/slider";
 import {HomeNavbarComponent} from "../component/HomeNavbarComponent";
-import {ApplicationRoute, RouterProps} from "../model/Routing";
+import {RouterProps} from "../model/Routing";
 
 export const UserPreferencesView = ({navigation}: RouterProps) => {
     const { setLoading } = useContext(LoadingContext);

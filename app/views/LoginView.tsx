@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/react-in-jsx-scope */
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useContext, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
@@ -29,9 +29,15 @@ export const LoginView = () => {
             UserService.userPreferences = await UserService.getUserPreferences(userId);
             await UserService.updateLoginStats(userId);
         } catch (error) {
-            alert('Sign in failed: ' + error.message);
+            if (error.code === "auth/invalid-credential") {
+                Alert.alert("Error", "Email or password is incorrect.");
+            } else {
+                Alert.alert("Error", "An unexpected error occurred. Please try again.");
+            }
+        } finally {
             setLoading(false);
         }
+
     };
 
     return (
