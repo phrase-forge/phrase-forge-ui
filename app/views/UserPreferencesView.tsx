@@ -11,6 +11,7 @@ import { UserContext } from "../services/UserContext";
 import { CustomizedDivider } from "../component/customized/CustomizedDivider";
 import { UserService } from "../services/UserService";
 import { HomeNavbarComponent } from "../component/HomeNavbarComponent";
+import { RouterProps } from "../model/Routing";
 
 export const UserPreferencesView = ({navigation}: RouterProps) => {
     const { setLoading } = useContext(LoadingContext);
