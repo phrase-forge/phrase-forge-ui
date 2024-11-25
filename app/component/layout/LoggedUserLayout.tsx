@@ -1,8 +1,9 @@
-import {HomeView} from "../../views/HomeView";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {ApplicationRoute} from "../../model/Routing";
-import {AccountView} from "../../views/AccountView";
-import {GamesLayout} from "./GamesLayout";
+import { HomeView } from "../../views/HomeView";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { ApplicationRoute } from "../../model/Routing";
+import { AccountView } from "../../views/AccountView";
+import { GamesLayout } from "./GamesLayout";
+import { PhrasesView } from "../../views/PhrasesView";
 import {SettingsLayout} from "./SettingsLayout";
 
 
@@ -14,6 +15,7 @@ export const LoggedUserLayout = () => {
             <Stack.Screen name={ApplicationRoute.HOME} component={HomeView}/>
             <Stack.Screen name={ApplicationRoute.GAMES} component={GamesLayout}/>
             <Stack.Screen name={ApplicationRoute.SETTINGS} component={SettingsLayout}/>
+            <Stack.Screen name={ApplicationRoute.DICTIONARY} component={PhrasesView}/>
             <Stack.Screen name={ApplicationRoute.ACCOUNT} component={AccountView}/>
         </Stack.Navigator>
     );
