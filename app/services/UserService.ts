@@ -434,10 +434,11 @@ export class UserService {
         });
     
         const usersWithPoints: { username: string; totalPoints: number }[] = [];
-    
+        let unknownUsersCount = 0;
+
         usersSnapshot.forEach((userDoc) => {
             const userId = userDoc.id;
-            const username = userDoc.data()?.preferences?.username || "UnknownUser";
+            const username = userDoc.data()?.preferences?.username || `UnknownUser${unknownUsersCount++}`;
             const totalPoints = userPointsMap.get(userId) || 0;
             usersWithPoints.push({ username, totalPoints });
         });
