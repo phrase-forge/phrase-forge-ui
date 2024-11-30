@@ -13,6 +13,7 @@ import {shuffleArray} from "../utils/shuffleArray";
 import { GameScoreHelper } from "../helpers/GameScoreHelper";
 import { Games } from "../model/Games";
 import EndOfGameView from "./EndOfGameView";
+import { updateUserAchievements } from "../services/AchievementsService";
 
 export const SequenceView = ({navigation}) => {
 
@@ -31,12 +32,13 @@ export const SequenceView = ({navigation}) => {
     const [streak, setStreak] = useState<number>(0);
     const [startTime, setStartTime] = useState<number | null>(null);
 
-    const onNavigationChange = () => {
+    const onNavigationChange = async () => {
         setHasError(false);
         setIsDisabledNextQuestionButton(true)
         setCorrectAnswerChosenNumber(0)
         if (sequenceTasks && number == sequenceTasks.length - 1) {
-            UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+            await UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+            await updateUserAchievements(user.user.uid);
             navigation.replace(ApplicationRoute.ENDGAME);
         } else {
             setButtonColors(Array(sequenceTasks[number + 1].words.length).fill(DEFAULT_COLORS.primaryBlue));

@@ -57,9 +57,22 @@ export interface UserStats {
     finishedTasksIds: string[];
 }
 
+export interface Threshold {
+    name: string;
+    value: number;
+}
+
+export interface Achievement {
+    name: string;
+    thresholds: Threshold[];
+}
+
+export type AchievementType = 'Bronze' | 'Silver' | 'Gold';
+
 export interface UserAchievement {
-    game: string;
-    type: 'Bronze' | 'Silver' | 'Gold';
+    name: string;
+    type: AchievementType;
+    thresholdName: string;
     date: Timestamp;
 }
 

@@ -320,17 +320,9 @@ export class UserService {
                     totalPoints: (userStats.commonStats.totalPoints || 0) + newScore
                 };
     
-                const newAchievement = {
-                    game: gameKey,
-                    date: new Date(),
-                    type: "New Record"
-                };
-                const updatedAchievements = [...userStats.achievements, newAchievement];
-    
                 await updateDoc(userStatsRef, {
                     gameStats: updatedGameStats,
                     commonStats: updatedCommonStats,
-                    achievements: updatedAchievements
                 });
             } else {
                 console.error(`No such user statistics found for userId: ${userId}`);
@@ -465,5 +457,6 @@ export class UserService {
         return true; 
     }
         
+    
         
 }           
