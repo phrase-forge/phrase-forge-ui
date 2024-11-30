@@ -17,6 +17,7 @@ import { db } from "./Firebase";
 import { DATABASE_TABLE_NAME } from "../model/DatabaseProperties";
 import { User } from "firebase/auth";
 import { Games } from "../model/Games";
+import { CustomTaskService } from "./CustomTaskService";
 
 
 export class UserService {
@@ -62,15 +63,17 @@ export class UserService {
                 updateDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)), {finishedTasksIds: learnedTasks});
 
             });
-
-
     }
 
-    static async getUserQuizTask(userId: string): Promise<QuizTask[]> {
+    private static async getStatsAndTaskPromise(userId: string) {
         const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
         const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
 
         return Promise.all([userStatsPromise, taskPromise])
+    }
+
+    static async getUserQuizTask(userId: string): Promise<QuizTask[]> {
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -78,7 +81,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "quiz", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "quiz", learnedTasks, task)) {
                         quizTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -94,10 +97,7 @@ export class UserService {
     }
 
     static async getUserTranslateTask(userId: string): Promise<TranslateTask[]> {
-        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
-        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-
-        return Promise.all([userStatsPromise, taskPromise])
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -105,7 +105,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "translate", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "translate", learnedTasks, task)) {
                         translateTasks.push({
                             answer: gameData.answer,
                             category: gameData.category,
@@ -121,10 +121,7 @@ export class UserService {
     }
 
     static async getUserGapsTask(userId: string): Promise<GapsTask[]> {
-        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
-        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-
-        return Promise.all([userStatsPromise, taskPromise])
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -132,7 +129,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "gaps", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "gaps", learnedTasks, task)) {
                         gapsTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -149,10 +146,7 @@ export class UserService {
     }
 
     static async getUserPicturesTask(userId: string): Promise<PicturesTask[]> {
-        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
-        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-
-        return Promise.all([userStatsPromise, taskPromise])
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -160,7 +154,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "pictures", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "pictures", learnedTasks, task)) {
                         picturesTasks.push({
                             answers: gameData.answers,
                             category: gameData.category,
@@ -177,10 +171,7 @@ export class UserService {
     }
 
     static async getUserPairsTask(userId: string): Promise<PairsTask[]> {
-        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
-        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-
-        return Promise.all([userStatsPromise, taskPromise])
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -188,7 +179,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "pairs", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "pairs", learnedTasks, task)) {
                         pairsTasks.push({
                             category: gameData.category,
                             difficultyLevel: gameData.difficultyLevel,
@@ -206,10 +197,7 @@ export class UserService {
     }
 
     static async getUserSequenceTask(userId: string): Promise<SequenceTask[]> {
-        const userStatsPromise = getDoc(doc(db, DATABASE_TABLE_NAME.STATISTICS, userId));
-        const taskPromise = getDocs(collection(db, DATABASE_TABLE_NAME.TASKS));
-
-        return Promise.all([userStatsPromise, taskPromise])
+        return this.getStatsAndTaskPromise(userId)
             .then(([userStatsSnap, tasks]) => {
                 const userStats = userStatsSnap.data();
                 const learnedTasks: string[] = userStats.finishedTasksIds;
@@ -217,7 +205,7 @@ export class UserService {
 
                 tasks.forEach(task => {
                     const gameData = task.data();
-                    if (this.getTaskForUser(gameData, "sequence", learnedTasks, task)) {
+                    if (this.userTaskPredicate(userId, "sequence", learnedTasks, task)) {
                         sequenceTask.push({
                             id: task.id,
                             type: gameData.type,
@@ -235,20 +223,37 @@ export class UserService {
         return updateDoc(updateRef, {preferences});
     }
 
+    private static countCustomGames(customGamesData) {
+        const customGamesMap = new Map();
+        customGamesData.forEach(customGameSnapshot => {
+            const data = customGameSnapshot.data();
+            if (customGamesMap.has(data.type)) {
+                const currentCount = customGamesMap.get(data.type);
+                customGamesMap.set(data.type, currentCount + 1);
+            } else {
+                customGamesMap.set(data.type, 1);
+            }
+        })
+        return customGamesMap;
+    }
+
     static async getUserStatistics(userId: string): Promise<UserStats> {
         const userStatsPromise = getDoc((doc(db, DATABASE_TABLE_NAME.STATISTICS, userId)));
         const gamesPromise = getDocs(collection(db, DATABASE_TABLE_NAME.GAMES));
+        const customGamesPromise = CustomTaskService.getTasks(userId);
 
-        return Promise.all([userStatsPromise, gamesPromise])
-            .then(async ([userStatsSnap, games]) => {
+        return Promise.all([userStatsPromise, gamesPromise, customGamesPromise])
+            .then(async ([userStatsSnap, games, customUserGames]) => {
+                const customGamesCountMap = this.countCustomGames(customUserGames);
                 const gameStats: GameStatistic[] = [];
                 const userStats = userStatsSnap.data();
+
                 const finishedTasksIds = userStats?.finishedTasksIds || [];
 
                 const taskPromises = finishedTasksIds.map(taskId => getDoc(doc(db, DATABASE_TABLE_NAME.TASKS, taskId)));
                 const tasksSnapshot = await Promise.all(taskPromises);
                 const tasksByType: { [key: string]: number } = {};
-                
+
                 tasksSnapshot.forEach(taskSnap => {
                     if (taskSnap.exists()) {
                         const taskData = taskSnap.data();
@@ -260,11 +265,12 @@ export class UserService {
                 games.forEach(gameRef => {
                     const gameData = gameRef.data();
                     const currentScore = tasksByType[gameData.key] || 0;
+                    const customGamesCount = customGamesCountMap.get(gameData.name.toLowerCase()) || 0
 
                     gameStats.push({
                         name: gameData.name,
                         currentScore: currentScore,
-                        maxScore: gameData.tasks
+                        maxScore: gameData.tasks + customGamesCount
                     });
                 });
                 gameStats.sort((s1, s2) => s2.currentScore - s1.currentScore);
@@ -444,6 +450,17 @@ export class UserService {
         return gameData.type === gameType && !learnedTasks.includes(task.id) &&
             gameData.difficultyLevel === this.userPreferences.level &&
             (gameData.category === this.userPreferences.category || this.userPreferences.category == Category.ALL);
+    }
+    
+    private static userTaskPredicate(userId: string, gameType: string, learnedTasks: string[], task) {
+        const gameData = task.data();
+        const gameTypePredicate = gameData.type === gameType;
+        const taskNotFinishedPredicate = !learnedTasks.includes(task.id);
+        const difficultyPredicate = gameData.difficultyLevel === this.userPreferences.level;
+        const categoryPredicate = gameData.category === this.userPreferences.category || this.userPreferences.category == Category.ALL;
+        const customTaskPredicate = !gameData.userId || gameData.userId === userId;
+
+        return gameTypePredicate && taskNotFinishedPredicate && difficultyPredicate && categoryPredicate && customTaskPredicate;
     }
     static async isNickAvailable(nick: string, userUID: string): Promise<boolean> {
         const userSnap = await getDocs(collection(db, DATABASE_TABLE_NAME.USERS));
