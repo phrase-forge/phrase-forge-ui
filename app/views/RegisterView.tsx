@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { LoadingContext } from "../services/LoadingContext";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/Firebase";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ApplicationHeaderComponent } from "../component/ApplicationHeaderComponent";
 import { CustomizedTextInput } from "../component/customized/CustomizedTextInput";
 import { Link } from "@react-navigation/native";
@@ -13,14 +13,20 @@ import { ApplicationRoute } from "../model/Routing";
 export const RegisterView = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { setLoading } = useContext(LoadingContext);
+    const {setLoading} = useContext(LoadingContext);
 
     const signUp = async () => {
         setLoading(true);
 
         await createUserWithEmailAndPassword(auth, email, password)
             .catch(error => {
-                alert('Sign up failed: ' + error.message);
+                if (error.code === "auth/weak-password") {
+                    Alert.alert("Error", "The new password is too weak. Please choose a stronger password.");
+                } else if (error.code === "auth/invalid-email") {
+                    Alert.alert("Error", "The email address is invalid. Please check the format and try again.");
+                } else {
+                    Alert.alert("Error", "An unexpected error occurred. Please try again.");
+                }
                 setLoading(false);
             });
     };
