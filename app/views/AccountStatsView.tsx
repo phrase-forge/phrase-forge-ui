@@ -55,7 +55,7 @@ export const AccountStatsView = () => {
                                 fontWeight: 'bold'
                             }}>{gameStat.name} </Text>
                             <View style={{ width: '80%' }}>
-                                <ProgressBar progress={gameStat.currentScore / gameStat.maxScore}
+                                <ProgressBar progress={Number((gameStat.currentScore / gameStat.maxScore).toFixed(2))}
                                              style={{ height: 8, borderRadius: 10 }}
                                              color={MD3Colors.error50}/>
                             </View>
