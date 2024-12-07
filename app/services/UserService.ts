@@ -326,17 +326,9 @@ export class UserService {
                     totalPoints: (userStats.commonStats.totalPoints || 0) + newScore
                 };
     
-                const newAchievement = {
-                    game: gameKey,
-                    date: new Date(),
-                    type: "New Record"
-                };
-                const updatedAchievements = [...userStats.achievements, newAchievement];
-    
                 await updateDoc(userStatsRef, {
                     gameStats: updatedGameStats,
                     commonStats: updatedCommonStats,
-                    achievements: updatedAchievements
                 });
             } else {
                 console.error(`No such user statistics found for userId: ${userId}`);
@@ -427,6 +419,39 @@ export class UserService {
         }
     }
 
+    static async getUsersWithPoints(): Promise<{ username: string; totalPoints: number }[]> {
+        const usersSnapshot = await getDocs(collection(db, DATABASE_TABLE_NAME.USERS));
+        const statsSnapshot = await getDocs(collection(db, DATABASE_TABLE_NAME.STATISTICS));
+      
+        const userPointsMap = new Map<string, number>();
+      
+        statsSnapshot.forEach((statDoc) => {
+            const userId = statDoc.id;
+            const totalPoints = statDoc.data()?.commonStats?.totalPoints || 0;
+            userPointsMap.set(userId, totalPoints);
+        });
+    
+        const usersWithPoints: { username: string; totalPoints: number }[] = [];
+        let unknownUsersCount = 0;
+
+        usersSnapshot.forEach((userDoc) => {
+            const userId = userDoc.id;
+            const username = userDoc.data()?.preferences?.username || `UnknownUser${unknownUsersCount++}`;
+            const totalPoints = userPointsMap.get(userId) || 0;
+            usersWithPoints.push({ username, totalPoints });
+        });
+    
+        return usersWithPoints.sort((a, b) => b.totalPoints - a.totalPoints);
+    }
+    
+
+
+    private static getTaskForUser(gameData, gameType: string, learnedTasks: string[], task) {
+        return gameData.type === gameType && !learnedTasks.includes(task.id) &&
+            gameData.difficultyLevel === this.userPreferences.level &&
+            (gameData.category === this.userPreferences.category || this.userPreferences.category == Category.ALL);
+    }
+    
     private static userTaskPredicate(userId: string, gameType: string, learnedTasks: string[], task) {
         const gameData = task.data();
         const gameTypePredicate = gameData.type === gameType;
@@ -449,5 +474,6 @@ export class UserService {
         return true; 
     }
         
+    
         
 }           

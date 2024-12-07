@@ -14,6 +14,7 @@ import { CustomizedDivider } from "../component/customized/CustomizedDivider";
 import { SocialIcon } from "@rneui/themed";
 import { ApplicationRoute } from "../model/Routing";
 import {UserService} from "../services/UserService";
+import { updateUserAchievements } from "../services/AchievementsService";
 
 export const LoginView = () => {
     const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ export const LoginView = () => {
             const userId = userCredential.user.uid;
             UserService.userPreferences = await UserService.getUserPreferences(userId);
             await UserService.updateLoginStats(userId);
+            await updateUserAchievements(userId);
         } catch (error) {
             if (error.code === "auth/invalid-credential") {
                 Alert.alert("Error", "Email or password is incorrect.");

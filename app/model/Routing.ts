@@ -38,6 +38,7 @@ export enum ApplicationRoute {
     STATS = `${ApplicationRoute.ACCOUNT}/stats`,
     ACHIEVEMENTS = `${ApplicationRoute.ACCOUNT}/achievements`,
     ACTIVITY = `${ApplicationRoute.ACCOUNT}/activity`,
+    RANKING = `${ApplicationRoute.ACCOUNT}/ranking`,
 
     // settings
     SETTINGS_VIEW = `${ApplicationRoute.SETTINGS}/settings_view`,

@@ -14,6 +14,7 @@ import { ApplicationRoute } from "../model/Routing";
 import {shuffleArray} from "../utils/shuffleArray";
 import { GameScoreHelper } from "../helpers/GameScoreHelper";
 import { Games } from "../model/Games";
+import { updateUserAchievements } from "../services/AchievementsService";
 
 export const PairsView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -88,7 +89,7 @@ export const PairsView = ({ navigation }) => {
     setShowCorrectAnswers(true);
   };
 
-  const onNavigationChange = () => {
+  const onNavigationChange = async () => {
     setOptionColors(
       Array.from({ length: 6 }, (_, index) =>
         index % 2 === 0
@@ -118,7 +119,8 @@ export const PairsView = ({ navigation }) => {
 
     setSelectedFirstColumnOption(null);
     if (pairsTasks.length === 0) {
-      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await updateUserAchievements(user.user.uid);
       navigation.replace(ApplicationRoute.ENDGAME);
     } else {
       shuffleOptions(pairsTasks);

@@ -20,6 +20,7 @@ import { ApplicationRoute } from "../model/Routing";
 import EndOfGameView from "./EndOfGameView";
 import { GameScoreHelper } from "../helpers/GameScoreHelper";
 import { Games } from "../model/Games";
+import { updateUserAchievements } from "../services/AchievementsService";
 
 export const TranslateView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -37,7 +38,7 @@ export const TranslateView = ({ navigation }) => {
   const [streak, setStreak] = useState<number>(0);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const onNavigationChange = () => {
+  const onNavigationChange = async () => {
     if (taskToRemove === 1) {
       translateTasks.splice(number, 1);
       setTaskToRemove(0);
@@ -55,7 +56,8 @@ export const TranslateView = ({ navigation }) => {
     setCorrectAnswer("");
     setIsSubmitted(false);
     if (translateTasks.length === 0) {
-      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await updateUserAchievements(user.user.uid);
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };

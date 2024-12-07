@@ -2,5 +2,6 @@ export enum DATABASE_TABLE_NAME {
     USERS = 'users',
     STATISTICS = 'stats',
     GAMES = 'games',
-    TASKS = 'tasks'
+    TASKS = 'tasks',
+    ACHIEVEMENTS = 'achievements',
 }

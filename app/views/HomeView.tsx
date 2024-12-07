@@ -66,7 +66,7 @@ export const HomeView = ({ navigation }: RouterProps) => {
                         }}>{commonStats.minutesToday || 0}</Text>
                         <Text style={{ color: DEFAULT_COLORS.secondaryGray, fontSize: 16 }}>/ 60min</Text>
                     </View>
-                    <ProgressBar progress={Math.min(1, commonStats.minutesToday / 60)} style={{ height: 8, borderRadius: 10 }}
+                    <ProgressBar progress={Math.min(1, Number((commonStats.minutesToday / 60).toFixed(2)))} style={{ height: 8, borderRadius: 10 }}
                                  color={DEFAULT_COLORS.primaryBlue}/>
                 </CustomizedCard>
 
