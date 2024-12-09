@@ -12,6 +12,7 @@ import { ApplicationRoute } from "../model/Routing";
 import EndOfGameView from "./EndOfGameView";
 import { GameScoreHelper } from "../helpers/GameScoreHelper";
 import { Games } from "../model/Games";
+import { updateUserAchievements } from "../services/AchievementsService";
 
 export const GapsView = ({ navigation }) => {
   const { user } = useContext(UserContext);
@@ -26,7 +27,7 @@ export const GapsView = ({ navigation }) => {
   const [streak, setStreak] = useState<number>(0);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const onNavigationChange = () => {
+  const onNavigationChange = async () => {
     if (taskToRemove === 1) {
       gapsTasks.splice(number, 1);
       setTaskToRemove(0);
@@ -43,7 +44,9 @@ export const GapsView = ({ navigation }) => {
     setOptionColors(Array(4).fill(DEFAULT_COLORS.primaryBlue));
     setSelectedOption(null);
     if (gapsTasks.length == 0) {
-      UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await UserService.updateGameTimeStats(user.user.uid, new Date(startTime), new Date());
+      await updateUserAchievements(user.user.uid);
+
       navigation.replace(ApplicationRoute.ENDGAME);
     }
   };

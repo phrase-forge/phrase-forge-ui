@@ -3,10 +3,11 @@ import { ApplicationRoute, RouterProps } from "../model/Routing";
 import { ApplicationBottomBar } from "../component/navigation/ApplicationBottomBar";
 import React, { useState } from "react";
 import { DEFAULT_COLORS } from "../styles/Colors";
-import { AccountActivityView } from "./AccountActivityView";
+import { AccountAchievementsView } from "./AccountAchievementsView";
 import { AccountStatsView } from "./AccountStatsView";
 import { CustomizedAvatar } from "../component/customized/CustomizedAvatar";
 import { useFetchUserStats } from "../hooks/useFetchUserStats";
+import { AccountRankingView } from "./AccountRankingView";
 
 
 export const AccountView = ({ navigation }: RouterProps) => {
@@ -21,10 +22,10 @@ export const AccountView = ({ navigation }: RouterProps) => {
 
     const currentTabView = () => {
         switch (tab) {
-            case ApplicationRoute.ACTIVITY:
-                return <AccountActivityView/>;
             case ApplicationRoute.ACHIEVEMENTS:
-                return <AccountActivityView/>;
+                return <AccountAchievementsView/>;
+            case ApplicationRoute.RANKING:
+                return <AccountRankingView/>;
             default:
                 return <AccountStatsView/>;
         }
@@ -53,9 +54,9 @@ export const AccountView = ({ navigation }: RouterProps) => {
                           style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Achievements
                     </Text>
                 </View>
-                <View style={tab === ApplicationRoute.ACTIVITY ? style.selectedTab : {}}>
-                    <Text onPress={() => setTab(ApplicationRoute.ACTIVITY)}
-                          style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Activity
+                <View style={tab === ApplicationRoute.RANKING ? style.selectedTab : {}}>
+                    <Text onPress={() => setTab(ApplicationRoute.RANKING)}
+                          style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>Ranking
                     </Text>
                 </View>
             </View>

@@ -1,45 +1,45 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
 import { StyleSheet, Text, View } from "react-native";
 import { DEFAULT_COLORS } from "../../styles/Colors";
 import { UserAchievement } from "../../model/ApplicationUser";
 
-const AchievementItemOrder = ({ type }) => {
-    const getColor = () => {
+export const AchievementItem = (props: UserAchievement & { isUnlocked: boolean }) => {
+
+    const getAchievementColor = (type) => {
         switch (type) {
-            case 'Gold':
-                return '#FFF08D';
+            case 'Bronze':
+                return '#cd7f32';
             case 'Silver':
-                return '#E1E1E1';
+                return '#c0c0c0';
+            case 'Gold':
+                return '#ffd700';
             default:
-                return '#e7cfae';
+                return 'gray';
         }
     };
 
-    const getColorIn = () => {
-        switch (type) {
-            case 'Gold':
-                return '#FFD700';
-            case 'Silver':
-                return '#C0C0C0';
-            default:
-                return '#CD7F32';
-        }
-    }
-    return <View style={styles.itemOrderContainer}>
-        <View style={{ ...styles.itemOrder, backgroundColor: getColor() }}></View>
-        <View style={{ ...styles.itemOrderIn, backgroundColor: getColorIn() }}></View>
-    </View>;
-};
-
-export const AchievementItem = (props: UserAchievement) => {
-    return <View style={styles.itemContainer}>
-        <AchievementItemOrder type={props.type}/>
-        <View>
-            <Text style={styles.itemTitle}>Earned
-                <Text style={styles.itemTextBold}> {props.type}</Text> in <Text style={styles.itemTextBold}>{props.game}</Text>
-            </Text>
-            <Text style={styles.itemDate}>{props.date.toDate().toLocaleString()}</Text>
+    return (
+        <View style={[
+            styles.achievementItem,
+            { opacity: props.isUnlocked ? 1 : 0.5 }
+        ]}>
+            <View style={[
+                styles.achievementIcon,
+                { backgroundColor: getAchievementColor(props.type) }
+            ]}>
+                <Text style={styles.achievementType}>{props.type.charAt(0)}</Text>
+            </View>
+            <View style={styles.achievementInfo}>
+                <Text style={styles.thresholdName}>{props.thresholdName}</Text>
+                {props.isUnlocked && props.date ? (
+                    <Text style={styles.dateText}>Unlocked: {new Date(props.date.seconds * 1000).toLocaleDateString()}</Text>
+                ) : (
+                    <Text style={styles.dateText}>Locked</Text>
+                )}
+            </View>
         </View>
-    </View>;
+    );
 };
 
 const styles = StyleSheet.create({
@@ -72,5 +72,38 @@ const styles = StyleSheet.create({
     },
     itemDate: {
         color: DEFAULT_COLORS.primaryGray
-    }
+    },
+
+    achievementItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        padding: 10,
+        borderRadius: 8,
+        backgroundColor: '#f0f0f0',
+        boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+    },
+    achievementIcon: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    achievementType: {
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    achievementInfo: {
+        flexDirection: 'column',
+    },
+    thresholdName: {
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    dateText: {
+        fontSize: 14,
+        color: '#888',
+    },
 });
